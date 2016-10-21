@@ -3,7 +3,7 @@ package com.kebuu.controller
 import com.kebuu.Board
 import com.kebuu.action.ClientAction
 import com.kebuu.dto.ClientInfo
-import com.kebuu.dto.ClientStatus
+import com.kebuu.enums.ClientStatus
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
