@@ -1,0 +1,34 @@
+<!doctype html>
+
+<html>
+<head>
+    <title>Riot todo</title>
+    <link rel="stylesheet" href="todo.css">
+</head>
+
+<body>
+
+<board dimension={{x:2,y:3}}></board>
+<todo></todo>
+
+<script src="todo.tag" type="riot/tag"></script>
+<script src="board.tag" type="riot/tag"></script>
+<script src="/webjars/riot/2.6.1/riot+compiler.js"></script>
+
+<script>
+//    riot.mount('todo', {
+//        title: 'I want to do!',
+//        items: [
+//            { title: 'Avoid excessive caffeine', done: true },
+//            { title: 'Hidden item',  hidden: true },
+//            { title: 'Be less provocative'  },
+//            { title: 'Be nice to people' }
+//        ]
+//    });
+
+    riot.mount('board');
+</script>
+
+</body>
+
+</html>
