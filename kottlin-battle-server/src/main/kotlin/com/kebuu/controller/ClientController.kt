@@ -1,8 +1,8 @@
 package com.kebuu.controller
 
-import com.kebuu.Board
-import com.kebuu.action.ClientAction
-import com.kebuu.dto.ClientInfo
+import com.kebuu.action.StepAction
+import com.kebuu.bean.ClientInfo
+import com.kebuu.board.Board
 import com.kebuu.enums.ClientStatus
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -34,19 +34,19 @@ internal class ClientController {
     }
 
     @GetMapping("/{id}/action")
-    fun getAction(): ClientAction {
+    fun getAction(): StepAction {
         val clientHost = "localhost"
         val clientPort = 8080
 
-        return restTemplate.exchange("http://$clientHost:$clientPort/action", HttpMethod.GET, HttpEntity.EMPTY, ClientAction::class.java).body
+        return restTemplate.exchange("http://$clientHost:$clientPort/action", HttpMethod.GET, HttpEntity.EMPTY, StepAction::class.java).body
     }
 
     @GetMapping("/{id}/init")
-    fun init(): ClientAction {
+    fun init(): StepAction {
         val clientHost = "localhost"
         val clientPort = 8080
 
-        return restTemplate.exchange("http://$clientHost:$clientPort/action", HttpMethod.POST, HttpEntity(Board()), ClientAction::class.java).body
+        return restTemplate.exchange("http://$clientHost:$clientPort/action", HttpMethod.POST, HttpEntity(Board()), StepAction::class.java).body
     }
 }
 

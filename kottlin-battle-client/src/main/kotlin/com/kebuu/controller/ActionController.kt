@@ -1,7 +1,7 @@
 package com.kebuu.controller
 
 import com.kebuu.Position
-import com.kebuu.action.ClientAction
+import com.kebuu.action.StepAction
 import com.kebuu.action.MoveAction
 import com.kebuu.action.NoAction
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,8 +14,8 @@ import java.time.LocalTime
 internal class ActionController {
 
     @GetMapping
-    fun action(): ClientAction {
-        var action: ClientAction = NoAction()
+    fun action(): StepAction {
+        var action: StepAction = NoAction()
 
         if(LocalTime.now().second % 2 == 0) {
             action = MoveAction(Position(10, 10))

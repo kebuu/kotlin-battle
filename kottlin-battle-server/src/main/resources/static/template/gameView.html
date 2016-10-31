@@ -1,0 +1,15 @@
+<h3>Jeu en cours ({{$ctrl.game.status}})</h3>
+
+<button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status != 'STARTED'">Start</button>
+
+<p>
+    Nombre de joueur: {{$ctrl.game.gamers.length}}
+</p>
+<p>
+    Step en cours: {{$ctrl.game.currentStep}}
+</p>
+
+<div>
+    <board ng-if="$ctrl.game.status" model="$ctrl.game.board"></board>
+</div>
+

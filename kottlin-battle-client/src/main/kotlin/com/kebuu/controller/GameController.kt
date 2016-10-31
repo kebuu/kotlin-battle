@@ -1,7 +1,7 @@
 package com.kebuu.controller
 
-import com.kebuu.Board
-import com.kebuu.action.ClientAction
+import com.kebuu.board.Board
+import com.kebuu.action.StepAction
 import com.kebuu.action.NoAction
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 internal class GameController {
 
     @PostMapping("/init")
-    fun action(@RequestBody board: Board): ClientAction {
+    fun action(@RequestBody board: Board): StepAction {
         println(board)
 
         return NoAction()

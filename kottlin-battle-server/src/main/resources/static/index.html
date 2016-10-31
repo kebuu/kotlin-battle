@@ -3,14 +3,21 @@
 <html>
 <head>
     <title>Riot todo</title>
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="css/app.css">
+    <script src="/webjars/sockjs-client/1.1.1/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
     <script src="/webjars/angularjs/1.5.8/angular.min.js"></script>
-    <script src="app.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/gameView.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/boardCell.js"></script>
+    <script src="js/gameList.js"></script>
 </head>
 
 <body ng-app="app">
 
-<board></board>
+<game-view></game-view>
+
 </body>
 
 </html>

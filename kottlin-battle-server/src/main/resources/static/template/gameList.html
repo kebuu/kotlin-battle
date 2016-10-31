@@ -1,0 +1,14 @@
+<div style="width:200px;float: left;border: solid black 1px">
+    <p ng-show="$ctrl.loading">Chargement...</p>
+    <ul ng-hide="$ctrl.loading">
+        <li ng-repeat="game in $ctrl.games">
+            <a href="#" ng-click="$ctrl.onGameClicked(game.id)">#{{game.id}} - {{game.status}}</a>
+        </li>
+    </ul>
+
+    <button ng-click="$ctrl.createNewGame()">Cr&eacute;er un nouveau jeu</button>
+</div>
+
+<div style="float: left;border: solid black 1px">
+    <game-view game="$crtl.selectedGame"></game-view>
+</div>

@@ -1,0 +1,30 @@
+.board {
+    border: black solid 1px;
+    border-collapse:collapse;
+}
+
+.board td {
+    border: black solid 1px;
+}
+
+.cell {
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+.hole {
+    background: url('../image/hole.png') no-repeat;
+    background-size: 40px 40px;
+}
+
+.mountain {
+    background: url('../image/mountain.png') no-repeat;
+    background-size: 40px 40px;
+}
+
+.treasure {
+    background: url('../image/treasure.png') no-repeat;
+    background-size: 40px 40px;
+}

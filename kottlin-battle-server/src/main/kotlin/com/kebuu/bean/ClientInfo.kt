@@ -1,4 +1,4 @@
-package com.kebuu.dto
+package com.kebuu.bean
 
 import com.kebuu.enums.ClientStatus
 

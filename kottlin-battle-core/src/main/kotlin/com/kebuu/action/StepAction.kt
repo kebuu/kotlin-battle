@@ -8,6 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
         JsonSubTypes.Type(value = NoAction::class, name = "none"),
         JsonSubTypes.Type(value = MoveAction::class, name = "move")
 )
-interface ClientAction {
+interface StepAction {
 
 }
