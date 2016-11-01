@@ -15,7 +15,7 @@
     </div>
     <div class="vr"></div>
     <div>
-        <board ng-if="$ctrl.game.status" model="$ctrl.game.board"></board>
+        <board ng-if="$ctrl.game.status == 'STARTED'" model="$ctrl.game.board"></board>
     </div>
 </div>
 
