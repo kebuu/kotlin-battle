@@ -9,7 +9,13 @@
     Step en cours: {{$ctrl.game.currentStep}}
 </p>
 
-<div>
-    <board ng-if="$ctrl.game.status" model="$ctrl.game.board"></board>
+<div style="display: flex">
+    <div style="width: 100px">
+        <gamers-ranking gamers="$ctrl.game.gamers"></gamers-ranking>
+    </div>
+    <div class="vr"></div>
+    <div>
+        <board ng-if="$ctrl.game.status" model="$ctrl.game.board"></board>
+    </div>
 </div>
 

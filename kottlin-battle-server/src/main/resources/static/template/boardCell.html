@@ -1,5 +1,8 @@
-<ul class="{{$ctrl.getClass()}}">
-    <li ng-repeat="spawn in $ctrl.getSpawns()">
-        {{spawn.pseudo}}
-    </li>
-</ul>
+<div class="cell {{$ctrl.getBackgroundCellClass()}}">
+
+    <div class="cell {{$ctrl.getForegroundCellClass()}}" ng-if="!$ctrl.containsOnlyOneRemoteGamer"></div>
+
+    <div ng-if="!!$ctrl.containsOnlyOneRemoteGamer">
+        <img class="remote-gamer-icon" ng-src="$ctrl.getSpawns()[0].iconUrl" />
+    </div>
+</div>

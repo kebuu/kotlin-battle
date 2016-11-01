@@ -8,7 +8,7 @@ import com.kebuu.gamer.BaseGamer
 
 class ImmobileBot private constructor(pseudo: String): BaseGamer(pseudo){
 
-    constructor(): this("ImmobileBot-" + Bot.COUNTER.andIncrement )
+    constructor(): this("ImmobileBot-" + Bot.COUNTER.andIncrement)
 
     override fun getNextAction(gameInfo: GameInfo): StepAction {
         return NoAction()

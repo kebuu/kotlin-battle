@@ -3,12 +3,14 @@ angular.module('app').component('boardCell', {
     controller: function(constants) {
         let cellItems = [];
 
+        this.containsOnlyOneRemoteGamer = null;
+
         this.$onInit = function() {
-            this.getCellItems(this);
+            this.prepare();
         };
 
         this.$onChanges = function() {
-            this.getCellItems(this);
+            this.prepare();
         };
 
         this.hasMountain = function(){
@@ -23,18 +25,28 @@ angular.module('app').component('boardCell', {
             return this.hasType(constants.TREASURE_TYPE);
         };
 
-        this.getClass = function(){
-            let cellClass = "cell";
+        this.getBackgroundCellClass = function(){
+            let cellClass = "";
 
             if(this.hasType(constants.TREASURE_TYPE)) {
-                cellClass += " " + constants.TREASURE_TYPE;
+                cellClass = constants.TREASURE_TYPE;
             } else if(this.hasType(constants.HOLE_TYPE)) {
-                cellClass += " " + constants.HOLE_TYPE;
+                cellClass = constants.HOLE_TYPE;
             } else if(this.hasType(constants.MOUNTAIN_TYPE)) {
-                cellClass += " " + constants.MOUNTAIN_TYPE;
+                cellClass = constants.MOUNTAIN_TYPE;
             }
 
             return cellClass;
+        };
+
+        this.getForegroundCellClass = function(){
+            let spawns = this.getSpawns();
+
+            if(spawns.length > 1) {
+                return 'crowd';
+            } else if (spawns.length === 1) {
+                return spawns[0].gamerType;
+            }
         };
 
         this.getSpawns = function(){
@@ -57,8 +69,12 @@ angular.module('app').component('boardCell', {
             return new Array(this.model.dimension.x);
         };
 
-        this.getCellItems = function() {
+        this.prepare = function() {
             cellItems = this.cells[this.row + "_" + this.column] || [];
+
+            this.containsOnlyOneRemoteGamer = this.getSpawns().filter(spawn => {
+                return spawn.gamerType == 'remote';
+            }).length == 1;
         };
     },
     bindings: {

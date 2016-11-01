@@ -1,19 +1,21 @@
 package com.kebuu.gamer
 
-abstract class BaseGamer(val pseudo: String, var zpoints: Double = 0.0): Gamer {
+abstract class BaseGamer(val pseudo: String): Gamer {
 
-    override fun getZpointCount() = zpoints
+    private var zPoints: Double = 0.0
 
-    override fun addZpoint(double: Double) {
-        zpoints += double
+    override fun getZPoints() = zPoints
+
+    override fun addZPoints(double: Double) {
+        zPoints += double
     }
 
-    override fun remove(double: Double) {
-        zpoints -= double
+    override fun removeZPoints(double: Double) {
+        zPoints -= double
     }
 
-    override fun removePercent(percent: Double) {
-        zpoints *= (1.0 - percent / 100.0)
+    override fun removeZPointsPercent(percent: Double) {
+        zPoints *= (1.0 - percent / 100.0)
     }
 
     override fun pseudo() = pseudo
