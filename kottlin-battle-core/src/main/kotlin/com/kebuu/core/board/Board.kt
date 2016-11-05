@@ -23,6 +23,10 @@ data class Board(val dimension: Dimension = Dimension(),
         return (0..dimension.x).contains(position.x) && (0..dimension.y).contains(position.y)
     }
 
+    fun itemsAt(position: Position): List<BoardItem> {
+        return itemsByPosition()[position] ?:  emptyList()
+    }
+
     fun nextEmptyPosition(): Position {
         val itemsByPosition = itemsByPosition()
 
@@ -53,8 +57,12 @@ data class Board(val dimension: Dimension = Dimension(),
         return positions.iterator()
     }
 
-    fun  gamerSpawn(gamer: Gamer): Spawn {
+    fun gamerSpawn(gamer: Gamer): Spawn {
         return items.first { it is Spawn && it.owner == gamer } as Spawn
+    }
+
+    fun getTreasureAt(position: Position): Treasure? {
+        return itemsAt(position).firstOrNull() { it is Treasure } as? Treasure
     }
 }
 

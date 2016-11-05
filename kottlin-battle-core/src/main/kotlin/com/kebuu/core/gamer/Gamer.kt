@@ -17,5 +17,11 @@ interface Gamer {
     fun removeZPoints(double: Double)
 
     fun removeZPointsPercent(percent: Double)
+
+    fun getLife(): Double
+
+    fun removeLife(double: Double)
+
+    fun setLife(double: Double)
 }
 

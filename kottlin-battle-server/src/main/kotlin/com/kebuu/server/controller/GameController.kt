@@ -2,7 +2,7 @@ package com.kebuu.server.controller
 
 import com.kebuu.core.game.Game
 import com.kebuu.server.dto.GameDto
-import com.kebuu.server.game.GameManager
+import com.kebuu.server.manager.GameManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

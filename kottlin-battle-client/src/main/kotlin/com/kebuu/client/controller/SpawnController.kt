@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/spawn")
-internal class GameController {
+internal class SpawnController {
 
     @PutMapping("/update")
     fun action(@RequestParam point: Int): SpawnAttributes {

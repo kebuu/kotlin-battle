@@ -1,13 +1,13 @@
-package com.kebuu.server.game
+package com.kebuu.server.manager
 
 import com.kebuu.core.Position
 import com.kebuu.core.board.Hole
 import com.kebuu.core.board.Mountain
-import com.kebuu.core.board.ZPoint
+import com.kebuu.core.board.Treasure
+import com.kebuu.core.config.GameConfig
 import com.kebuu.core.enums.GameStatus
 import com.kebuu.core.game.Game
 import com.kebuu.core.gamer.Gamer
-import com.kebuu.core.config.GameConfig
 import com.kebuu.server.gamer.bot.DummyBot
 import com.kebuu.server.gamer.bot.ImmobileBot
 import com.kebuu.server.websocket.WebSockerService
@@ -42,7 +42,7 @@ class GameManager @Autowired constructor(val webSockerService: WebSockerService,
         activeGame.addGamers(DummyBot(), ImmobileBot())
         activeGame.board.addItem(Mountain(Position(3,3)))
         activeGame.board.addItem(Hole(Position(3,4)))
-        activeGame.board.addItem(ZPoint(position = Position(4,4)))
+        activeGame.board.addItem(Treasure(position = Position(4,4)))
 
 
         activeGame.init()
