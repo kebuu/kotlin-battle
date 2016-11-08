@@ -1,0 +1,13 @@
+<div ng-if="!$ctrl.isUserLogged()">
+    <div ng-show="$ctrl.loading">Chargement...</div>
+
+    <form action="{{ '/signin/google' }}" method="post" ng-hide="$ctrl.loading">
+        <button type="submit">
+            Go !
+        </button>
+    </form>
+</div>
+<div ng-if="$ctrl.isUserLogged()">
+    <game-view></game-view>
+</div>
+

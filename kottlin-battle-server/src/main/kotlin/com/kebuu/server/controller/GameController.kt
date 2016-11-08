@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/games")
-internal class GameController @Autowired constructor(val gameManager: GameManager) {
+class GameController @Autowired constructor(val gameManager: GameManager) {
 
     @GetMapping
     fun getGames(): Collection<Game> {

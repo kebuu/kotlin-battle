@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate
 
 @RestController
 @RequestMapping("/clients")
-internal class ClientController {
+class ClientController {
 
     val restTemplate : RestTemplate = RestTemplate()
 

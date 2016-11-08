@@ -7,9 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.http.client.ClientHttpRequestFactory
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
+import org.springframework.social.config.annotation.EnableSocial
 import org.springframework.web.client.RestTemplate
 
 @SpringBootApplication
+@EnableSocial
 open class KotlinBattleApplication {
 
     lateinit @Autowired var gameConfig: GameConfig
