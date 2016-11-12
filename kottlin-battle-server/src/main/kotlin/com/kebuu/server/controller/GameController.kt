@@ -1,22 +1,20 @@
 package com.kebuu.server.controller
 
-import com.kebuu.core.game.Game
 import com.kebuu.server.dto.GameDto
+import com.kebuu.server.exception.UnknownUserException
 import com.kebuu.server.manager.GameManager
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.security.Principal
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/games")
 class GameController @Autowired constructor(val gameManager: GameManager) {
-
-    @GetMapping
-    fun getGames(): Collection<Game> {
-        return gameManager.games
-    }
 
     @GetMapping("/active")
     fun getActiveGame(): GameDto {
@@ -30,9 +28,26 @@ class GameController @Autowired constructor(val gameManager: GameManager) {
         }).start()
     }
 
-    @PostMapping
-    fun createGame(): GameDto {
-        return GameDto(gameManager.createGame())
+    @GetMapping("/register")
+    fun register(@RequestParam port: Int, principal: Principal, request: HttpServletRequest): ResponseEntity<Void> {
+        return try {
+            gameManager.register(principal.name, request.remoteAddr, port)
+            ResponseEntity.ok().build()
+        } catch (e: UnknownUserException) {
+            ResponseEntity.notFound().build()
+        } catch (e: UnknownUserException) {
+            ResponseEntity.status(428).build()
+        }
+    }
+
+    @GetMapping("/unregister")
+    fun unregister(principal: Principal): ResponseEntity<Void> {
+        return try {
+            gameManager.unregister(principal.name)
+            ResponseEntity.ok().build()
+        } catch (e: UnknownUserException) {
+            ResponseEntity.status(428).build()
+        }
     }
 }
 

@@ -62,7 +62,11 @@ data class Board(val dimension: Dimension = Dimension(),
     }
 
     fun getTreasureAt(position: Position): Treasure? {
-        return itemsAt(position).firstOrNull() { it is Treasure } as? Treasure
+        return itemsAt(position).firstOrNull { it is Treasure } as? Treasure
+    }
+
+    inline fun <reified T> doesPositionHasItemOfType(position: Position): Boolean {
+        return itemsAt(position).any { it is T }
     }
 }
 

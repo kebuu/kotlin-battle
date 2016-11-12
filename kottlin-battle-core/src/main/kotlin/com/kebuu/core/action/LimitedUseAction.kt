@@ -1,6 +1,6 @@
 package com.kebuu.core.action
 
-interface LimitedUseAction {
+interface LimitedUseAction : StepAction {
 
     fun getType(): LimitedUseActionType
 

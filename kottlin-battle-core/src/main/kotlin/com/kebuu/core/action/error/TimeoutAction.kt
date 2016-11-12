@@ -7,8 +7,7 @@ import com.kebuu.core.action.validation.ActionValidator
 
 class TimeoutAction : StepAction {
 
-    // TODO mieux traiter ce cas
-    override fun executeBy(executor: ActionExecutor) = String()
+    override fun executeBy(executor: ActionExecutor) = executor.execute(this)
 
     override fun validateBy(validator: ActionValidator) = ActionValidationResult.ok()
 

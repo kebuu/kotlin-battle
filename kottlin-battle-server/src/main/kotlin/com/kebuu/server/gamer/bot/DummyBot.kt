@@ -6,7 +6,7 @@ import com.kebuu.core.action.NoAction
 import com.kebuu.core.action.StepAction
 import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.dto.GameInfo
-import com.kebuu.server.gamer.BaseGamer
+import com.kebuu.core.gamer.BaseGamer
 
 class DummyBot private constructor(pseudo: String): BaseGamer(pseudo){
 
@@ -24,7 +24,7 @@ class DummyBot private constructor(pseudo: String): BaseGamer(pseudo){
 
         return operations.map { it(currentPosition) }
                 .map(::MoveAction)
-                .firstOrNull { gameInfo.game.board.isOnBoard(it.goTo) }
+                .firstOrNull { gameInfo.board.isOnBoard(it.goTo) }
                 ?: NoAction()
     }
 

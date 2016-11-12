@@ -1,4 +1,4 @@
-package com.kebuu.server.websocket
+package com.kebuu.server.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry

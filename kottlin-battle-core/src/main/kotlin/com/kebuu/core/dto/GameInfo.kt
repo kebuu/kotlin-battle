@@ -1,9 +1,9 @@
 package com.kebuu.core.dto
 
+import com.kebuu.core.board.Board
 import com.kebuu.core.board.spawn.Spawn
-import com.kebuu.core.game.Game
 
-class GameInfo(val spawn: Spawn, val game: Game) {
+class GameInfo(val spawn: Spawn, val board: Board) {
 
     fun currentPosition() = spawn.position
 

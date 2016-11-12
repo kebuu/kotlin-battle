@@ -14,10 +14,11 @@ import org.springframework.social.google.connect.GoogleConnectionFactory
 open class GoogleConfigurerAdapter: SocialConfigurerAdapter()  {
 
     @Autowired lateinit var properties: GoogleProperties
+    @Autowired lateinit var accountConnectionSignUp: AccountConnectionSignUp
 
     override fun getUsersConnectionRepository(connectionFactoryLocator: ConnectionFactoryLocator): UsersConnectionRepository {
         val inMemoryUsersConnectionRepository = InMemoryUsersConnectionRepository(connectionFactoryLocator)
-        inMemoryUsersConnectionRepository.setConnectionSignUp(AccountConnectionSignUp())
+        inMemoryUsersConnectionRepository.setConnectionSignUp(accountConnectionSignUp)
         return inMemoryUsersConnectionRepository
     }
 

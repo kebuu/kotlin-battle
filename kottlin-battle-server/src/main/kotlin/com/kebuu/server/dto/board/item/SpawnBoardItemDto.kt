@@ -4,7 +4,7 @@ import com.kebuu.core.board.spawn.Spawn
 import com.kebuu.core.gamer.Gamer
 import com.kebuu.server.gamer.bot.DummyBot
 import com.kebuu.server.gamer.bot.ImmobileBot
-import com.kebuu.server.gamer.bot.RemoteGamer
+import com.kebuu.core.gamer.RemoteGamer
 
 class SpawnBoardItemDto: AbstractBoardItemDto {
 

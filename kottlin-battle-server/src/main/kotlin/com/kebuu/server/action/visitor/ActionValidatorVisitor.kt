@@ -1,12 +1,15 @@
-package com.kebuu.core.action.validation
+package com.kebuu.server.action.visitor
 
 import com.kebuu.core.action.*
+import com.kebuu.core.action.validation.ActionValidationResult
 import com.kebuu.core.action.validation.ActionValidationResult.Companion.from
 import com.kebuu.core.action.validation.ActionValidationResult.Companion.ok
 import com.kebuu.core.action.validation.ActionValidationResult.Companion.withError
-import com.kebuu.core.game.Game
+import com.kebuu.core.action.validation.ActionValidator
 import com.kebuu.core.gamer.Gamer
-import com.kebuu.core.utils.*
+import com.kebuu.core.utils.canMoveTo
+import com.kebuu.server.game.Game
+import com.kebuu.server.utils.*
 
 class ActionValidatorVisitor(val game: Game, val gamer: Gamer) : ActionValidator {
 

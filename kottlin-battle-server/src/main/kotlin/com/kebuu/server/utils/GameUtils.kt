@@ -1,10 +1,10 @@
-package com.kebuu.core.utils
+package com.kebuu.server.utils
 
 import com.kebuu.core.Position
 import com.kebuu.core.action.LimitedUseAction
 import com.kebuu.core.board.Mountain
-import com.kebuu.core.game.Game
 import com.kebuu.core.gamer.Gamer
+import com.kebuu.server.game.Game
 
 fun Game.isOnBoard(position: Position) = this.board.isOnBoard(position)
 

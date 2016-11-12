@@ -1,6 +1,6 @@
 package com.kebuu.server.dto
 
-import com.kebuu.core.game.Game
+import com.kebuu.server.game.Game
 
 class GameDto(private val game: Game) {
 

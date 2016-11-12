@@ -12,16 +12,18 @@ interface Gamer {
 
     fun getZPoints(): Double
 
-    fun addZPoints(double: Double)
+    fun addZPoints(zPoints: Double)
 
-    fun removeZPoints(double: Double)
+    fun removeZPoints(zPoints: Double)
 
     fun removeZPointsPercent(percent: Double)
 
-    fun getLife(): Double
+    fun getLife(): Int
 
-    fun removeLife(double: Double)
+    fun removeLife(life: Int)
 
-    fun setLife(double: Double)
+    fun setLife(life: Int)
+
+    fun isDead() = getLife() == 0
 }
 

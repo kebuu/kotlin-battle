@@ -1,4 +1,4 @@
-package com.kebuu.core.config
+package com.kebuu.server.config
 
 import com.kebuu.core.action.LimitedUseAction
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -13,4 +13,6 @@ class GameConfig {
     var gamerResponseTimeoutTimeUnit = TimeUnit.MILLISECONDS
     var maxNumberOfStep = 3
     var limitedActionAllowedOccurrence = mutableMapOf<LimitedUseAction.LimitedUseActionType, Int>()
+    val gameStepDurationSecond: Long = 1
+    val updateSpawnInterval: Int = 15
 }

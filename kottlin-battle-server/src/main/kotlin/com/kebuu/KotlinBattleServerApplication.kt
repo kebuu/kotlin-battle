@@ -1,6 +1,6 @@
 package com.kebuu
 
-import com.kebuu.core.config.GameConfig
+import com.kebuu.server.config.GameConfig
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -9,6 +9,8 @@ import org.springframework.http.client.ClientHttpRequestFactory
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.social.config.annotation.EnableSocial
 import org.springframework.web.client.RestTemplate
+import java.time.Instant
+import java.util.*
 
 @SpringBootApplication
 @EnableSocial
@@ -19,6 +21,11 @@ open class KotlinBattleApplication {
     @Bean
     open fun restTemplate(): RestTemplate {
         return RestTemplate(clientHttpRequestFactory())
+    }
+
+    @Bean
+    open fun random(): Random {
+        return Random(Instant.EPOCH.epochSecond)
     }
 
     private fun clientHttpRequestFactory(): ClientHttpRequestFactory {
