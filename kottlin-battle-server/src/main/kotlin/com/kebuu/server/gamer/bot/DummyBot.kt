@@ -8,7 +8,7 @@ import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.gamer.BaseGamer
 
-class DummyBot private constructor(pseudo: String): BaseGamer(pseudo){
+class DummyBot private constructor(pseudo: String): BaseGamer(pseudo), Bot {
 
     constructor(): this("DummyBot-" + Bot.COUNTER.andIncrement )
 

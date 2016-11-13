@@ -1,7 +1,6 @@
 package com.kebuu.server.game
 
 
-import com.kebuu.core.Dimension
 import com.kebuu.core.Position
 import com.kebuu.core.action.LimitedUseAction.LimitedUseActionType
 import com.kebuu.core.action.error.ExceptionAction
@@ -55,7 +54,6 @@ open class Game(val id: Int,
 
     fun init() {
         status = GameStatus.STARTED
-        board.setDimension(Dimension(5, 5))
 
         val gamersSpawnAttributes = getInitialSpawnAttributes()
         gamersSpawnAttributes
@@ -71,7 +69,7 @@ open class Game(val id: Int,
         currentStep = step
 
         if (level.enableSpawnUpdate && currentStep % config.updateSpawnInterval == 0) {
-            val spawnAttributesUpdatePoints = level.spawnUpdatePoints
+            val spawnAttributesUpdatePoints = random.nextInt(5) + 1
             val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
 
             for (gamerSpawnAttributes in gamersSpawnAttributes) {

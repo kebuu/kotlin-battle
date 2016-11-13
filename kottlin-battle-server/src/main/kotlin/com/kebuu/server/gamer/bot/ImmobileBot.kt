@@ -6,7 +6,7 @@ import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.gamer.BaseGamer
 
-class ImmobileBot private constructor(pseudo: String): BaseGamer(pseudo){
+class ImmobileBot private constructor(pseudo: String): BaseGamer(pseudo), Bot {
 
     constructor(): this("ImmobileBot-" + Bot.COUNTER.andIncrement)
 

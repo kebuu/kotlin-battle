@@ -7,23 +7,48 @@ import com.kebuu.core.board.BoardItem
 import com.kebuu.core.board.Hole
 import com.kebuu.core.board.Mountain
 import com.kebuu.core.board.Treasure
-import com.kebuu.server.gamer.bot.Bot
+import com.kebuu.core.enums.BoardItemGenerator.holeGenerator
+import com.kebuu.core.enums.BoardItemGenerator.mountainGenerator
+import com.kebuu.core.enums.BoardItemGenerator.treasureGenerator
+import com.kebuu.core.gamer.Gamer
+import com.kebuu.server.game.Game
+import com.kebuu.server.gamer.bot.DummyBot
+import com.kebuu.server.gamer.bot.ImmobileBot
+import java.util.*
 
 enum class GameLevel(val enableSpawnUpdate: Boolean,
                      val forbiddenActions: List<Class<out StepAction>>,
-                     val boardItemsProportion: Map<Class<out BoardItem>, Int>,
-                     val generateBotOfType: List<Class<out Bot>>) {
+                     val boardItemGenerators: Map<(game: Game) -> BoardItem, Int>,
+                     val botGenerators: Map<(game: Game) -> Gamer, Int>) {
 
     LEVEL_0(false,
             listOf(FightAction::class.java, LimitedUseAction::class.java),
-            mapOf(Treasure::class.java to 50),
-            listOf()),
+            mapOf(treasureGenerator to 50),
+            mapOf(BotGenerator.dummyGenerator to 2)),
     LEVEL_1(false,
             listOf(FightAction::class.java),
-            mapOf(Treasure::class.java to 20, Hole::class.java to 10, Mountain::class.java to 10),
-            listOf()),
+            mapOf(treasureGenerator to 20, holeGenerator to 10, mountainGenerator to 10),
+            mapOf(BotGenerator.dummyGenerator to 2)),
     LEVEL_2(true,
             listOf(),
-            mapOf(Treasure::class.java to 30, Hole::class.java to 15, Mountain::class.java to 15),
-            listOf())
+            mapOf(treasureGenerator to 30, holeGenerator to 15, mountainGenerator to 15),
+            mapOf(BotGenerator.immobileGenerator to 2, BotGenerator.dummyGenerator to 2))
+}
+
+object BoardItemGenerator {
+
+    val random = Random()
+
+    val treasureGenerator =  { game: Game ->
+        Treasure(game.board.randomEmptyPosition(), (random.nextInt(5) + 1) * 100)
+    }
+
+    val holeGenerator =  { game: Game -> Hole(game.board.randomEmptyPosition())}
+    val mountainGenerator =  { game: Game -> Mountain(game.board.randomEmptyPosition())}
+}
+
+object BotGenerator {
+
+    val dummyGenerator =  { game: Game -> DummyBot() }
+    val immobileGenerator =  { game: Game -> ImmobileBot() }
 }

@@ -16,7 +16,7 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
     override fun execute(digAction: DigAction): String {
         val gamerSpawn = game.getSpawn(gamer.pseudo())
         val treasure = board.getTreasureAt(gamerSpawn.position)!!
-        gamer.addZPoints(treasure.zPoints)
+        gamer.addZPoints(treasure.zPoints.toDouble())
         treasure.discoveredAtStep = game.currentStep
         return "${gamer.pseudo()} a deterré ${treasure.zPoints} zPoints !!"
     }

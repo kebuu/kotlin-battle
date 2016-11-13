@@ -1,11 +1,12 @@
 package com.kebuu.server.manager
 
+import com.kebuu.core.enums.GameLevel
 import com.kebuu.core.enums.GameStatus
-import com.kebuu.core.gamer.Gamer
 import com.kebuu.core.gamer.RemoteGamer
 import com.kebuu.server.config.GameConfig
 import com.kebuu.server.exception.UnknownUserException
 import com.kebuu.server.game.Game
+import com.kebuu.server.game.GameFactory
 import com.kebuu.server.service.EventLogService
 import com.kebuu.server.service.UserRegistryService
 import com.kebuu.server.service.WebSocketService
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class GameManager @Autowired constructor(val webSocketService: WebSocketService,
                                          val userRegistryService: UserRegistryService,
                                          val eventLogService: EventLogService,
+                                         val gameFactory: GameFactory,
                                          val restTemplate: RestTemplate,
                                          val gameConfig: GameConfig) {
 
@@ -32,18 +34,16 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
     val idGenerator = AtomicInteger()
     val executor = Executors.newScheduledThreadPool(1)!!
 
-    fun createGame(): Game {
-        val game = Game(idGenerator.incrementAndGet(), gameConfig, eventLogService)
+    fun createGame(gameLevel: GameLevel = GameLevel.LEVEL_0): Game {
+        val game = Game(idGenerator.incrementAndGet(), gameConfig, eventLogService, gameLevel)
         games.add(game)
         return game
     }
 
-    fun addGamer(gamer: Gamer) {
-        getActiveGame().addGamers(gamer)
-    }
-
     fun start() {
-        val activeGame = getActiveGame()
+        val activeGame = activeGame()
+
+        gameFactory.configureBoardFor(activeGame)
 
         activeGame.init()
 
@@ -68,20 +68,22 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
     }
 
     private fun end() {
-        getActiveGame().end()
-        //webSockerService.sendGame(getActiveGame())
+        activeGame().end()
+        //webSockerService.sendGame(activeGame())
     }
 
-    fun getActiveGame() = games.firstOrNull { it.status != GameStatus.STOPPED } ?: createGame()
+    fun activeGame() = activeGameOrNull() ?: throw IllegalStateException("Pas de jeu active disponible")
+
+    fun activeGameOrNull() = games.firstOrNull { it.status != GameStatus.STOPPED }
 
     fun register(name: String, host: String, port: Int) {
         val user = userRegistryService.getUser(name) ?: throw UnknownUserException(name)
 
         val remoteGamer = RemoteGamer(name, host, port, user.avatarUrl, restTemplate)
-        getActiveGame().register(remoteGamer)
+        activeGame().register(remoteGamer)
     }
 
-    fun unregister(name: String) = getActiveGame().unregister(name)
+    fun unregister(name: String) = activeGame().unregister(name)
 }
 
 
