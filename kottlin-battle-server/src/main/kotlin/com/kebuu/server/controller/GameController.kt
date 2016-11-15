@@ -4,6 +4,7 @@ import com.kebuu.core.enums.GameLevel
 import com.kebuu.server.dto.GameDto
 import com.kebuu.server.exception.UnknownUserException
 import com.kebuu.server.manager.GameManager
+import com.kebuu.server.utils.toUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -37,10 +38,15 @@ class GameController @Autowired constructor(val gameManager: GameManager) {
         }).start()
     }
 
+    @GetMapping("/stop")
+    fun stopActiveGame() {
+        gameManager.stop()
+    }
+
     @GetMapping("/register")
-    fun register(@RequestParam port: Int, principal: Principal, request: HttpServletRequest): ResponseEntity<Void> {
+    fun register(@RequestParam(defaultValue = "8081") port: Int, principal: Principal, request: HttpServletRequest): ResponseEntity<Void> {
         return try {
-            gameManager.register(principal.name, request.remoteAddr, port)
+            gameManager.register(principal.toUser().email, request.remoteAddr, port)
             ResponseEntity.ok().build()
         } catch (e: UnknownUserException) {
             ResponseEntity.notFound().build()
@@ -52,7 +58,7 @@ class GameController @Autowired constructor(val gameManager: GameManager) {
     @GetMapping("/unregister")
     fun unregister(principal: Principal): ResponseEntity<Void> {
         return try {
-            gameManager.unregister(principal.name)
+            gameManager.unregister(principal.toUser().email)
             ResponseEntity.ok().build()
         } catch (e: UnknownUserException) {
             ResponseEntity.status(428).build()

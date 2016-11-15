@@ -23,12 +23,33 @@ angular.module('app').component('gameView', {
                 stompClient.subscribe('/topic/active-game', data =>  {
                     $scope.$apply(() => {
                         this.game = JSON.parse(data.body);
+                        console.log(this.game);
                     })
                 });
             });
-        }
+        };
+
+        this.isUserAdmin = function() {
+            return this.user.authorities.some(authority => authority.authority == "ROLE_ADMIN");
+        };
+
+        this.isUserRegistered = function() {
+            return this.game.gamers.some(gamer => gamer.pseudo == this.user.email);
+        };
+
+        this.register = function() {
+            $http.get("/games/register").catch(() => {
+                console.log(arguments);
+            });
+        };
+
+        this.unregister = function() {
+            $http.get("/games/unregister").catch(() => {
+                console.log(arguments);
+            });
+        };
     },
     bindings: {
-
+        user: '<'
     }
 });

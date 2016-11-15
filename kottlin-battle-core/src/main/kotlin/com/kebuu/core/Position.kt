@@ -19,10 +19,10 @@ data class Position(val x: Int = 0, val y: Int = 0) : Comparable<Position> {
     }
 
     override fun compareTo(other: Position): Int {
-        var comparison = y.compareTo(other.y)
+         var comparison = x.compareTo(other.x)
 
         if (comparison == 0) {
-            comparison = x.compareTo(other.x)
+            comparison = y.compareTo(other.y)
         }
 
         return comparison

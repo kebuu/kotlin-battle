@@ -53,7 +53,7 @@ angular.module('app').component('boardCell', {
             return cellItems.filter(el => {
                 return el.type == constants.SPAWN_TYPE;
             });
-        }
+        };
 
         this.hasType = function(type) {
             return cellItems.findIndex(el => {
@@ -61,20 +61,11 @@ angular.module('app').component('boardCell', {
             }) !== -1;
         };
 
-        this.rows = function() {
-            return new Array(this.model.dimension.y);
-        };
-
-        this.columns = function() {
-            return new Array(this.model.dimension.x);
-        };
-
         this.prepare = function() {
-            cellItems = this.cells[this.row + "_" + this.column] || [];
+            cellItems = this.cells[this.column + "_" + this.row] || [];
 
-            this.containsOnlyOneRemoteGamer = this.getSpawns().filter(spawn => {
-                return spawn.gamerType == 'remote';
-            }).length == 1;
+            let spawns = this.getSpawns();
+            this.containsOnlyOneRemoteGamer = spawns.length == 1 && spawns[0].gamerType == 'remote';
         };
     },
     bindings: {

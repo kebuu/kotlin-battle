@@ -12,25 +12,25 @@ class GameFactory @Autowired constructor(val random: Random) {
         val dimension = Dimension(calculateXYdimension(game.gamers.size), calculateXYdimension(game.gamers.size))
         game.board.setDimension(dimension)
 
-        for((generator, proportion) in game.level.boardItemGenerators) {
+        for((boardItemGenerator, proportion) in game.level.boardItemGenerators) {
             val numberOfItem = dimension.getNumberOfCells() * proportion / 100
 
             for (i in 1..numberOfItem) {
-                game.board.addItem(generator(game))
+                game.board.addItem(boardItemGenerator(game))
             }
         }
 
-        for((generator, proportion) in game.level.botGenerators) {
+        for((botGenerator, proportion) in game.level.botGenerators) {
             val numberOfItem = dimension.getNumberOfCells() * proportion / 100
 
             for (i in 1..numberOfItem) {
-                game.addGamers(generator(game))
+                game.addGamers(botGenerator(game))
             }
         }
     }
 
     private fun calculateXYdimension(numberOfGamers: Int) : Int {
-        val side = Math.max(5, numberOfGamers / 2 )
-        return side - random.nextInt(4) - 2
+        val side = Math.max(10, numberOfGamers / 2 )
+        return side - (random.nextInt(5) - 2)
     }
 }

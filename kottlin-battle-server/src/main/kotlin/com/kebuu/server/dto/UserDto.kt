@@ -1,6 +1,6 @@
 package com.kebuu.server.dto
 
-class UserDto(val pseudo: String) {
+import org.springframework.security.core.GrantedAuthority
 
-}
+class UserDto(val username: String, val email: String, val authorities: List<GrantedAuthority>)
 

@@ -1,7 +1,6 @@
 package com.kebuu.server.game
 
 
-import com.kebuu.core.Position
 import com.kebuu.core.action.LimitedUseAction.LimitedUseActionType
 import com.kebuu.core.action.error.ExceptionAction
 import com.kebuu.core.action.error.TimeoutAction
@@ -17,6 +16,7 @@ import com.kebuu.core.gamer.Gamer
 import com.kebuu.core.gamer.GamerAction
 import com.kebuu.core.gamer.GamerSpawnAttributes
 import com.kebuu.core.gamer.RemoteGamer
+import com.kebuu.core.utils.Loggable
 import com.kebuu.core.utils.waitAndUnwrap
 import com.kebuu.server.action.visitor.ActionExecutorVisitor
 import com.kebuu.server.action.visitor.ActionValidatorVisitor
@@ -31,10 +31,10 @@ import java.util.concurrent.TimeoutException
 open class Game(val id: Int,
                 val config: GameConfig,
                 val eventLogService: EventLogService,
-                val level: GameLevel = GameLevel.LEVEL_0) {
+                val level: GameLevel = GameLevel.LEVEL_0) : Loggable {
 
     var currentStep = 0
-    val gamers: MutableList<Gamer> = mutableListOf()
+    val gamers: MutableSet<Gamer> = mutableSetOf()
     var status: GameStatus = GameStatus.CREATED
     val board: Board = Board()
     val random: Random = Random(1)
@@ -57,8 +57,11 @@ open class Game(val id: Int,
 
         val gamersSpawnAttributes = getInitialSpawnAttributes()
         gamersSpawnAttributes
-                .map { Spawn(it.gamer, it.spawnAttributes, Position.Companion.ORIGIN) }
-                .forEach { board.addItem(it) }
+                .map { Spawn(it.gamer, it.spawnAttributes, board.randomEmptyPosition()) }
+                .forEach {
+                    it.owner.setLife(it.attributes.resistance)
+                    board.addItem(it)
+                }
     }
 
     fun end() {
@@ -66,9 +69,11 @@ open class Game(val id: Int,
     }
 
     fun runStep(step: Int) {
+        logger.info("Running step $step")
         currentStep = step
 
         if (level.enableSpawnUpdate && currentStep % config.updateSpawnInterval == 0) {
+            logger.info("Getting spawn update")
             val spawnAttributesUpdatePoints = random.nextInt(5) + 1
             val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
 
@@ -76,6 +81,7 @@ open class Game(val id: Int,
                 val gamer = gamerSpawnAttributes.gamer
                 val spawn = getSpawn(gamer.pseudo())
 
+                logger.info("Getting spawn update for ${gamer.pseudo()}")
                 val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
                 if (validationResult.isOk()) {
                     spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
@@ -88,11 +94,14 @@ open class Game(val id: Int,
             }
         }
 
+        logger.info("Getting next actions")
         val futureNextActions = mutableListOf<CompletableFuture<GamerAction>>()
         gamers.map { gamer ->
+            logger.info("Getting next actions for ${gamer.pseudo()}")
             futureNextActions.add(CompletableFuture.supplyAsync {getGamerAction(gamer)} )
         }
 
+        logger.info("Processing all actions")
         processActions(futureNextActions.waitAndUnwrap())
 
         for (gamer in gamers) {
@@ -121,7 +130,7 @@ open class Game(val id: Int,
 
     private fun getGamerAction(gamer: Gamer): GamerAction {
         val supplyAsync: CompletableFuture<GamerAction> = CompletableFuture.supplyAsync {
-            gamer.getNextAction(GameInfo(board.gamerSpawn(gamer), board))
+            gamer.getNextAction(GameInfo(board.gamerSpawn(gamer), board, Integer(currentStep)))
         }
 
         return try {
@@ -195,11 +204,11 @@ open class Game(val id: Int,
         }
     }
 
-    fun unregister(name: String) {
+    fun unregister(email: String) {
         if (isStarted()) {
             throw GameAlreadyStartedException()
         } else {
-            gamers.removeAll { it.pseudo() == name }
+            gamers.removeAll { it.pseudo() == email }
         }
     }
 }

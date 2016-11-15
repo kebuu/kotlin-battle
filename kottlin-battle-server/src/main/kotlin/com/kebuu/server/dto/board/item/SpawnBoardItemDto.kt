@@ -2,9 +2,9 @@ package com.kebuu.server.dto.board.item
 
 import com.kebuu.core.board.spawn.Spawn
 import com.kebuu.core.gamer.Gamer
+import com.kebuu.core.gamer.RemoteGamer
 import com.kebuu.server.gamer.bot.DummyBot
 import com.kebuu.server.gamer.bot.ImmobileBot
-import com.kebuu.core.gamer.RemoteGamer
 
 class SpawnBoardItemDto: AbstractBoardItemDto {
 
@@ -19,10 +19,7 @@ class SpawnBoardItemDto: AbstractBoardItemDto {
     }
 
     private fun extractIconUrl(gamer: Gamer): String? {
-        if (gamer is RemoteGamer) {
-
-        }
-        return null
+        return if (gamer is RemoteGamer) gamer.avatarUrl else null
     }
 
     private fun extractGamerType(gamer: Gamer): String {

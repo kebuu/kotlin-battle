@@ -20,7 +20,7 @@ data class Board(val dimension: Dimension = Dimension(),
     }
 
     fun isOnBoard(position: Position): Boolean {
-        return (0..dimension.x).contains(position.x) && (0..dimension.y).contains(position.y)
+        return (0..(dimension.x - 1)).contains(position.x) && (0..(dimension.y - 1)).contains(position.y)
     }
 
     fun itemsAt(position: Position): List<BoardItem> {

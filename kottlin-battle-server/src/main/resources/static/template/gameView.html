@@ -1,21 +1,49 @@
-<h3>Jeu en cours ({{$ctrl.game.status}})</h3>
+<div ng-if="!$ctrl.game.status">
+    Aucun jeu en cours
 
-<button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status != 'STARTED'">Start</button>
+    cr&eacute;er un nouveau jeu
+    <game-creator></game-creator>
+</div>
+<div ng-if="!!$ctrl.game.status">
+    {{$ctrl.isUserAdmin()}}
+    {{$ctrl.isUserRegistered()}}
+    {{$ctrl.user}}
+    {{$ctrl.game.gamers}}
 
-<p>
-    Nombre de joueur: {{$ctrl.game.gamers.length}}
-</p>
-<p>
-    Step en cours: {{$ctrl.game.currentStep}}
-</p>
+    <h3>Jeu en cours ({{$ctrl.game.status}})</h3>
 
-<div style="display: flex">
-    <div style="width: 100px">
-        <gamers-ranking gamers="$ctrl.game.gamers"></gamers-ranking>
+    <button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status != 'STARTED'">Start</button>
+
+    <p>
+        Nombre de joueur: {{$ctrl.game.gamers.length}}
+    </p>
+    <p>
+        Step en cours: {{$ctrl.game.currentStep}}
+    </p>
+
+    <div style="display: flex" ng-if="$ctrl.game.status == 'CREATED'">
+        <p ng-hide="$ctrl.isUserRegistered()">Vous n'&ecirc;tes pas inscrit(e) :
+            <button ng-click="$ctrl.register()">S'inscrire</button>
+        </p>
+        <p ng-show="$ctrl.isUserRegistered()">Vous &ecirc;tes inscrit(e) :
+            <button ng-click="$ctrl.unregister()">Se d&eacute;sinscrire</button>
+        </p>
+
+        <p>Joueurs inscrits : </p>
+        <ol>
+            <li ng-repeat="gamer in $ctrl.game.gamers">{{gamer.pseudo}}</li>
+        </ol>
     </div>
-    <div class="vr"></div>
-    <div>
-        <board ng-if="$ctrl.game.status == 'STARTED'" model="$ctrl.game.board"></board>
+
+    <div style="display: flex"  ng-if="['STARTED', 'STOPPED'].includes($ctrl.game.status)">
+        <div style="width: 100px">
+            <gamers-ranking gamers="$ctrl.game.gamers"></gamers-ranking>
+        </div>
+        <div class="vr"></div>
+        <div>
+            <board model="$ctrl.game.board"></board>
+        </div>
     </div>
 </div>
+
 

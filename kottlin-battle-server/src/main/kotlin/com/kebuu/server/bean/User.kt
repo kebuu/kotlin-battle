@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.social.security.SocialUserDetails
 
-class User(val pseudo: String, val avatarUrl: String?, val email: String) : SocialUserDetails {
+class User(val pseudo: String, val avatarUrl: String?, val email: String, val role: String) : SocialUserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val authorities = mutableListOf<GrantedAuthority>()

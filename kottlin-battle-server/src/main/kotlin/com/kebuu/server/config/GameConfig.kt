@@ -11,7 +11,7 @@ class GameConfig {
 
     var gamerResponseTimeout = 1500L
     var gamerResponseTimeoutTimeUnit = TimeUnit.MILLISECONDS
-    var maxNumberOfStep = 3
+    var maxNumberOfStep = 10
     var limitedActionAllowedOccurrence = mutableMapOf<LimitedUseAction.LimitedUseActionType, Int>()
     val gameStepDurationSecond: Long = 1
     val updateSpawnInterval: Int = 15

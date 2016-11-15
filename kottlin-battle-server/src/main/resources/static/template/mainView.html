@@ -2,12 +2,13 @@
     <div ng-show="$ctrl.loading">Chargement...</div>
 
     <form action="{{ '/signin/google' }}" method="post" ng-hide="$ctrl.loading">
+        Pour acc&eacute;der à l'application
         <button type="submit">
-            Go !
+               Connectez-vous !
         </button>
     </form>
 </div>
 <div ng-if="$ctrl.isUserLogged()">
-    <game-view></game-view>
+    <game-view user="$ctrl.loggedUser"></game-view>
 </div>
 

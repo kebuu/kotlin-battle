@@ -12,15 +12,17 @@ class DummyBot private constructor(pseudo: String): BaseGamer(pseudo), Bot {
 
     constructor(): this("DummyBot-" + Bot.COUNTER.andIncrement )
 
-    override fun doGetNextAction(gameInfo: GameInfo): StepAction {
-        val currentPosition = gameInfo.currentPosition()
-
+    companion object {
         val operations = listOf(
             { position: Position -> position.plusX(1)},
             { position: Position -> position.plusY(1)},
             { position: Position -> position.plusX(-1)},
             { position: Position -> position.plusY(-1)}
         )
+    }
+
+    override fun doGetNextAction(gameInfo: GameInfo): StepAction {
+        val currentPosition = gameInfo.currentPosition()
 
         return operations.map { it(currentPosition) }
                 .map(::MoveAction)
@@ -31,7 +33,5 @@ class DummyBot private constructor(pseudo: String): BaseGamer(pseudo), Bot {
     override fun doGetSpawnAttributes(point: Int): SpawnAttributes {
         return SpawnAttributes()
     }
-
-
 }
 
