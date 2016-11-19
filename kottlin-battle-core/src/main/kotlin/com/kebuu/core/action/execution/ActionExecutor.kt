@@ -12,7 +12,7 @@ interface ActionExecutor {
 
     fun execute(fightAction: FightAction): String
 
-    fun execute(healthAction: HealthAction): String
+    fun execute(healAction: HealAction): String
 
     fun execute(lightSpeedMoveAction: LightSpeedMoveAction): String
 

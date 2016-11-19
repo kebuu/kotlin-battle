@@ -1,18 +1,20 @@
-package com.kebuu.server.dto.board.item
+package com.kebuu.core.dto.board.item
 
 import com.kebuu.core.board.spawn.Spawn
+import com.kebuu.core.bot.Bot
 import com.kebuu.core.gamer.Gamer
 import com.kebuu.core.gamer.RemoteGamer
-import com.kebuu.server.gamer.bot.DummyBot
-import com.kebuu.server.gamer.bot.ImmobileBot
+import kotlin.properties.Delegates
 
 class SpawnBoardItemDto: AbstractBoardItemDto {
 
-    val pseudo: String
-    val gamerType: String
-    val iconUrl: String?
+    var pseudo: String by Delegates.notNull()
+    var gamerType: String by Delegates.notNull()
+    var iconUrl: String? = null
 
-    constructor(spawn: Spawn): super("spawn") {
+    constructor()
+
+    constructor(spawn: Spawn) {
         pseudo = spawn.owner.pseudo()
         gamerType = extractGamerType(spawn.owner)
         iconUrl = extractIconUrl(spawn.owner)
@@ -24,8 +26,7 @@ class SpawnBoardItemDto: AbstractBoardItemDto {
 
     private fun extractGamerType(gamer: Gamer): String {
         return when(gamer) {
-            is ImmobileBot -> "immobileBot"
-            is DummyBot -> "dummyBot"
+            is Bot -> gamer.type
             is RemoteGamer -> "remote"
             else -> throw IllegalArgumentException(gamer.javaClass.toString())
         }

@@ -10,17 +10,17 @@ interface Gamer {
 
     fun getSpawnAttributes(point: Int): GamerSpawnAttributes
 
-    fun getZPoints(): Double
+    fun getZPoints(): Int
 
-    fun addZPoints(zPoints: Double)
+    fun gainZPoints(zPoints: Int)
 
-    fun removeZPoints(zPoints: Double)
+    fun loseZPoints(zPoints: Int)
 
-    fun removeZPointsPercent(percent: Double)
+    fun removeZPointsPercent(percent: Int)
 
     fun getLife(): Int
 
-    fun removeLife(life: Int)
+    fun loseLife(life: Int)
 
     fun setLife(life: Int)
 

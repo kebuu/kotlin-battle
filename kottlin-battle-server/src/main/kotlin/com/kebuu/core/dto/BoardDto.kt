@@ -1,9 +1,9 @@
-package com.kebuu.server.dto
+package com.kebuu.core.dto
 
 import com.kebuu.core.Dimension
 import com.kebuu.core.board.Board
-import com.kebuu.server.dto.board.item.AbstractBoardItemDto
-import com.kebuu.server.dto.board.item.BoardItemDtoFactory
+import com.kebuu.core.dto.board.item.AbstractBoardItemDto
+import com.kebuu.core.dto.board.item.BoardItemDtoFactory
 
 class BoardDto {
 

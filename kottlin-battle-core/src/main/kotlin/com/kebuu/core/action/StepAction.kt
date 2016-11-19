@@ -6,13 +6,13 @@ import com.kebuu.core.action.execution.ActionExecutor
 import com.kebuu.core.action.validation.ActionValidationResult
 import com.kebuu.core.action.validation.ActionValidator
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
         JsonSubTypes.Type(value = NoAction::class, name = "none"),
         JsonSubTypes.Type(value = MoveAction::class, name = "move"),
         JsonSubTypes.Type(value = DigAction::class, name = "dig"),
         JsonSubTypes.Type(value = FightAction::class, name = "fight"),
-        JsonSubTypes.Type(value = HealthAction::class, name = "health"),
+        JsonSubTypes.Type(value = HealAction::class, name = "health"),
         JsonSubTypes.Type(value = LightSpeedMoveAction::class, name = "light")
 )
 interface StepAction {

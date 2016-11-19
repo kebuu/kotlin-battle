@@ -8,7 +8,7 @@ object ActionComparator: Comparator<StepAction> {
     val MIN_PRIORITY = Int.MAX_VALUE
 
     val actionPriorities = mapOf(
-        HealthAction::class.java to 100,
+        HealAction::class.java to 100,
         LightSpeedMoveAction::class.java to 200,
         MoveAction::class.java to 300,
         DigAction::class.java to 400,

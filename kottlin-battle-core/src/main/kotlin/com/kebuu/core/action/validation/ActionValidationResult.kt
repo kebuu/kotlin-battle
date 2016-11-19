@@ -7,7 +7,7 @@ class ActionValidationResult private constructor() {
     companion object {
         fun ok() = ActionValidationResult()
         fun withError(message: String) = ActionValidationResult().addErrorMessage(message)
-        fun from(result: ActionValidationResult) = ActionValidationResult().addErrorMessages(result)
+        fun resultFrom(result: ActionValidationResult) = ActionValidationResult().addErrorMessages(result)
     }
 
     fun isOk(): Boolean = validationErrorMessages.isEmpty()

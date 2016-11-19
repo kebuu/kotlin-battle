@@ -1,4 +1,4 @@
-package com.kebuu.core.enums
+package com.kebuu.server.enums
 
 import com.kebuu.core.action.FightAction
 import com.kebuu.core.action.LimitedUseAction
@@ -7,10 +7,10 @@ import com.kebuu.core.board.BoardItem
 import com.kebuu.core.board.Hole
 import com.kebuu.core.board.Mountain
 import com.kebuu.core.board.Treasure
-import com.kebuu.core.enums.BoardItemGenerator.holeGenerator
-import com.kebuu.core.enums.BoardItemGenerator.mountainGenerator
-import com.kebuu.core.enums.BoardItemGenerator.treasureGenerator
 import com.kebuu.core.gamer.Gamer
+import com.kebuu.server.enums.BoardItemGenerator.treasureGenerator
+import com.kebuu.server.enums.BoardItemGenerator.holeGenerator
+import com.kebuu.server.enums.BoardItemGenerator.mountainGenerator
 import com.kebuu.server.game.Game
 import com.kebuu.server.gamer.bot.DummyBot
 import com.kebuu.server.gamer.bot.ImmobileBot

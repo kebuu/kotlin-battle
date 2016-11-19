@@ -16,7 +16,7 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
     override fun execute(digAction: DigAction): String {
         val gamerSpawn = game.getSpawn(gamer.pseudo())
         val treasure = board.getTreasureAt(gamerSpawn.position)!!
-        gamer.addZPoints(treasure.zPoints.toDouble())
+        gamer.gainZPoints(treasure.zPoints)
         treasure.discoveredAtStep = game.currentStep
         return "${gamer.pseudo()} a deterré ${treasure.zPoints} zPoints !!"
     }
@@ -27,17 +27,25 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
         val defender = defenderSpawn.owner
 
         val effectiveAttackForce = Math.max(gamerSpawn.attributes.force - defenderSpawn.attributes.resistance, 1)
-        defender.removeLife(Math.max(effectiveAttackForce, 0))
+        defender.loseLife(effectiveAttackForce)
+        val zPointTakenOnKill = defender.getZPoints() * game.config.zPointPercentTakenOnKill / 100
+
+        if (defender.isDead()) {
+            gamer.gainZPoints(zPointTakenOnKill)
+        }
+
         return "${gamer.pseudo()} inflige $effectiveAttackForce point(s) de dégat à $fightAction.attackedGamerPseudo"
     }
 
-    override fun execute(healthAction: HealthAction): String {
+    override fun execute(healAction: HealAction): String {
         val gamerSpawn = game.getSpawn(gamer.pseudo())
         gamer.setLife(gamerSpawn.attributes.resistance)
+        game.gamerUsedLimitedAction(gamer, healAction)
         return "${gamer.pseudo()} récupère toute sa vie"
     }
 
     override fun execute(lightSpeedMoveAction: LightSpeedMoveAction): String {
+        game.gamerUsedLimitedAction(gamer, lightSpeedMoveAction)
         return execute(lightSpeedMoveAction.moveAction) + " a la vitesse de la lumière"
     }
 

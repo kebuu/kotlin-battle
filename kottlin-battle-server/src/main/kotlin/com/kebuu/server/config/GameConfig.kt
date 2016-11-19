@@ -15,4 +15,8 @@ class GameConfig {
     var limitedActionAllowedOccurrence = mutableMapOf<LimitedUseAction.LimitedUseActionType, Int>()
     val gameStepDurationSecond: Long = 1
     val updateSpawnInterval: Int = 15
+    val zPointPercentTakenOnKill: Int = 15
+    val zPointPercentLostOnKill: Int = 5
+    val zPointPercentLostOnHole: Int = 10
+    val gamerLife: Int = 20
 }

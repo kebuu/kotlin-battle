@@ -1,10 +1,10 @@
 package com.kebuu.server.manager
 
-import com.kebuu.core.enums.GameLevel
 import com.kebuu.core.enums.GameStatus
 import com.kebuu.core.gamer.RemoteGamer
 import com.kebuu.core.utils.Loggable
 import com.kebuu.server.config.GameConfig
+import com.kebuu.server.enums.GameLevel
 import com.kebuu.server.exception.UnknownUserException
 import com.kebuu.server.game.Game
 import com.kebuu.server.game.GameFactory
@@ -34,11 +34,10 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
 
     val mappedScheduledTask = mutableMapOf<Game, ScheduledFuture<*>>()
     val games: MutableList<Game> = mutableListOf()
-    val idGenerator = AtomicInteger()
     val executor = Executors.newScheduledThreadPool(1)!!
 
     fun createGame(gameLevel: GameLevel = GameLevel.LEVEL_0): Game {
-        val game = Game(idGenerator.incrementAndGet(), gameConfig, eventLogService, gameLevel)
+        val game = Game(gameConfig, eventLogService, gameLevel)
         games.add(game)
         webSocketService.sendGame(activeGame())
         return game

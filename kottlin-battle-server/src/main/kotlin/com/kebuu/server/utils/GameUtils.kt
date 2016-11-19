@@ -15,7 +15,7 @@ fun Game.isThereMountainOn(position: Position): Boolean {
 }
 
 fun Game.canGamerUseLimitedAction(gamer: Gamer, action: LimitedUseAction): Boolean {
-    val actionUsedOccurrence = limitedActionUsedByGamers[gamer]?.get(action.getType()) ?: 0
+    val actionUsedOccurrence = limitedActionUsedByGamers[gamer] ?. get(action.getType()) ?: 0
     val allowedActionOccurrence = config.limitedActionAllowedOccurrence[action.getType()]
     return allowedActionOccurrence == null || actionUsedOccurrence < allowedActionOccurrence
 }

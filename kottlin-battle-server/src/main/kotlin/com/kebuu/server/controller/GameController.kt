@@ -1,7 +1,7 @@
 package com.kebuu.server.controller
 
-import com.kebuu.core.enums.GameLevel
 import com.kebuu.server.dto.GameDto
+import com.kebuu.server.enums.GameLevel
 import com.kebuu.server.exception.UnknownUserException
 import com.kebuu.server.manager.GameManager
 import com.kebuu.server.utils.toUser

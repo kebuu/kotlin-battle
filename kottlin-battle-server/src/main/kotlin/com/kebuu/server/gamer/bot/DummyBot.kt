@@ -1,16 +1,20 @@
 package com.kebuu.server.gamer.bot
 
+import com.kebuu.core.Dimension
 import com.kebuu.core.Position
 import com.kebuu.core.action.MoveAction
 import com.kebuu.core.action.NoAction
 import com.kebuu.core.action.StepAction
 import com.kebuu.core.board.spawn.SpawnAttributes
+import com.kebuu.core.bot.Bot
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.gamer.BaseGamer
 
-class DummyBot private constructor(pseudo: String): BaseGamer(pseudo), Bot {
+class DummyBot private constructor(pseudo: String, override val type: String): BaseGamer(pseudo), Bot {
 
-    constructor(): this("DummyBot-" + Bot.COUNTER.andIncrement )
+    constructor(): this("DummyBot-" + Bot.COUNTER.andIncrement, "dummyBot")
+
+    lateinit var boardDimension: Dimension
 
     companion object {
         val operations = listOf(
@@ -22,11 +26,16 @@ class DummyBot private constructor(pseudo: String): BaseGamer(pseudo), Bot {
     }
 
     override fun doGetNextAction(gameInfo: GameInfo): StepAction {
-        val currentPosition = gameInfo.currentPosition()
+        if(gameInfo.board.dimension != null) {
+            boardDimension = gameInfo.board.dimension!!
+        }
 
-        return operations.map { it(currentPosition) }
+        return operations.map { it(gameInfo.position) }
                 .map(::MoveAction)
-                .firstOrNull { gameInfo.board.isOnBoard(it.goTo) }
+                .firstOrNull {
+                    it.goTo.x in 0..(boardDimension.x - 1)  &&
+                            it.goTo.y in 0..(boardDimension.y - 1)
+                }
                 ?: NoAction()
     }
 

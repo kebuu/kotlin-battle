@@ -3,10 +3,10 @@ package com.kebuu.core.action
 import com.kebuu.core.action.execution.ActionExecutor
 import com.kebuu.core.action.validation.ActionValidator
 
-class HealthAction: LimitedUseAction {
+class HealAction : LimitedUseAction {
 
     override fun getType(): LimitedUseAction.LimitedUseActionType {
-        return LimitedUseAction.LimitedUseActionType.HEALTH
+        return LimitedUseAction.LimitedUseActionType.HEAL
     }
 
     override fun validateBy(validator: ActionValidator) = validator.validate(this)

@@ -9,11 +9,11 @@ import java.util.*
 class GameFactory @Autowired constructor(val random: Random) {
 
     fun configureBoardFor(game: Game) {
-        val dimension = Dimension(calculateXYdimension(game.gamers.size), calculateXYdimension(game.gamers.size))
+        val dimension = Dimension(calculateXYDimension(game.gamers.size), calculateXYDimension(game.gamers.size))
         game.board.setDimension(dimension)
 
         for((boardItemGenerator, proportion) in game.level.boardItemGenerators) {
-            val numberOfItem = dimension.getNumberOfCells() * proportion / 100
+            val numberOfItem = dimension.numberOfCells * proportion / 100
 
             for (i in 1..numberOfItem) {
                 game.board.addItem(boardItemGenerator(game))
@@ -21,7 +21,7 @@ class GameFactory @Autowired constructor(val random: Random) {
         }
 
         for((botGenerator, proportion) in game.level.botGenerators) {
-            val numberOfItem = dimension.getNumberOfCells() * proportion / 100
+            val numberOfItem = dimension.numberOfCells * proportion / 100
 
             for (i in 1..numberOfItem) {
                 game.addGamers(botGenerator(game))
@@ -29,7 +29,7 @@ class GameFactory @Autowired constructor(val random: Random) {
         }
     }
 
-    private fun calculateXYdimension(numberOfGamers: Int) : Int {
+    private fun calculateXYDimension(numberOfGamers: Int) : Int {
         val side = Math.max(10, numberOfGamers / 2 )
         return side - (random.nextInt(5) - 2)
     }

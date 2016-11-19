@@ -10,6 +10,6 @@ interface ActionValidator {
     fun validate(moveAction: MoveAction): ActionValidationResult
     fun validate(lightSpeedMoveAction: LightSpeedMoveAction): ActionValidationResult
     fun validate(fightAction: FightAction): ActionValidationResult
-    fun  validate(healthAction: HealthAction): ActionValidationResult
+    fun  validate(healAction: HealAction): ActionValidationResult
 
 }

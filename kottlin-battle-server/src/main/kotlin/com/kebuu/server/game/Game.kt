@@ -1,6 +1,7 @@
 package com.kebuu.server.game
 
 
+import com.kebuu.core.action.LimitedUseAction
 import com.kebuu.core.action.LimitedUseAction.LimitedUseActionType
 import com.kebuu.core.action.error.ExceptionAction
 import com.kebuu.core.action.error.TimeoutAction
@@ -10,7 +11,6 @@ import com.kebuu.core.board.spawn.Spawn
 import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.comparator.GamerActionComparator
 import com.kebuu.core.dto.GameInfo
-import com.kebuu.core.enums.GameLevel
 import com.kebuu.core.enums.GameStatus
 import com.kebuu.core.gamer.Gamer
 import com.kebuu.core.gamer.GamerAction
@@ -22,14 +22,14 @@ import com.kebuu.server.action.visitor.ActionExecutorVisitor
 import com.kebuu.server.action.visitor.ActionValidatorVisitor
 import com.kebuu.server.bean.GameEvent
 import com.kebuu.server.config.GameConfig
+import com.kebuu.server.enums.GameLevel
 import com.kebuu.server.exception.GameAlreadyStartedException
 import com.kebuu.server.service.EventLogService
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeoutException
 
-open class Game(val id: Int,
-                val config: GameConfig,
+open class Game(val config: GameConfig,
                 val eventLogService: EventLogService,
                 val level: GameLevel = GameLevel.LEVEL_0) : Loggable {
 
@@ -38,7 +38,7 @@ open class Game(val id: Int,
     var status: GameStatus = GameStatus.CREATED
     val board: Board = Board()
     val random: Random = Random(1)
-    val limitedActionUsedByGamers = mapOf<Gamer, Map<LimitedUseActionType, Int>>()
+    val limitedActionUsedByGamers = mutableMapOf<Gamer, MutableMap<LimitedUseActionType, Int>>()
 
     fun addGamers(vararg gamers: Gamer) {
         this.gamers.addAll(gamers)
@@ -46,6 +46,10 @@ open class Game(val id: Int,
 
     fun getGamer(pseudo: String): Gamer {
         return gamers.first { it.pseudo() == pseudo}
+    }
+
+    fun gamerExists(pseudo: String):Boolean {
+        return gamers.any { it.pseudo() == pseudo}
     }
 
     fun getSpawn(pseudo: String): Spawn {
@@ -59,7 +63,7 @@ open class Game(val id: Int,
         gamersSpawnAttributes
                 .map { Spawn(it.gamer, it.spawnAttributes, board.randomEmptyPosition()) }
                 .forEach {
-                    it.owner.setLife(it.attributes.resistance)
+                    it.owner.setLife(config.gamerLife)
                     board.addItem(it)
                 }
     }
@@ -73,25 +77,7 @@ open class Game(val id: Int,
         currentStep = step
 
         if (level.enableSpawnUpdate && currentStep % config.updateSpawnInterval == 0) {
-            logger.info("Getting spawn update")
-            val spawnAttributesUpdatePoints = random.nextInt(5) + 1
-            val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
-
-            for (gamerSpawnAttributes in gamersSpawnAttributes) {
-                val gamer = gamerSpawnAttributes.gamer
-                val spawn = getSpawn(gamer.pseudo())
-
-                logger.info("Getting spawn update for ${gamer.pseudo()}")
-                val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
-                if (validationResult.isOk()) {
-                    spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
-                } else {
-                    spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
-                    eventLogService.logEvent(GameEvent(gamer.pseudo(),
-                            "${gamer.pseudo()} ne sait pas faire des additions correctement pour configurer son pion -> " +
-                                    "mise à jour aléatoire"))
-                }
-            }
+            updateSpawns()
         }
 
         logger.info("Getting next actions")
@@ -107,6 +93,7 @@ open class Game(val id: Int,
         for (gamer in gamers) {
             val spawnPosition = board.gamerSpawn(gamer).position
             if (board.doesPositionHasItemOfType<Hole>(spawnPosition)) {
+                gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnHole / 100)
                 board.gamerSpawn(gamer).moveTo(board.randomEmptyPosition())
                 eventLogService.logEvent(GameEvent(gamer.pseudo(),
                         "${gamer.pseudo()} ne devait pas marcher bien droit, il vient de tomber dans un trou"))
@@ -116,10 +103,33 @@ open class Game(val id: Int,
         for (gamer in gamers) {
             if (gamer.isDead()) {
                 val gamerSpawn = board.gamerSpawn(gamer)
+                gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnKill / 100)
                 gamerSpawn.moveTo(board.randomEmptyPosition())
-                gamer.setLife(gamerSpawn.attributes.resistance)
+                gamer.setLife(config.gamerLife)
                 eventLogService.logEvent(GameEvent(gamer.pseudo(),
                         "RIP ${gamer.pseudo()} !"))
+            }
+        }
+    }
+
+    private fun updateSpawns() {
+        logger.info("Getting spawn update")
+        val spawnAttributesUpdatePoints = random.nextInt(5) + 1
+        val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
+
+        for (gamerSpawnAttributes in gamersSpawnAttributes) {
+            val gamer = gamerSpawnAttributes.gamer
+            val spawn = getSpawn(gamer.pseudo())
+
+            logger.info("Getting spawn update for ${gamer.pseudo()}")
+            val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
+            if (validationResult.isOk()) {
+                spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
+            } else {
+                spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
+                eventLogService.logEvent(GameEvent(gamer.pseudo(),
+                        "${gamer.pseudo()} ne sait pas faire des additions correctement pour configurer son pion -> " +
+                                "mise à jour aléatoire"))
             }
         }
     }
@@ -210,6 +220,16 @@ open class Game(val id: Int,
         } else {
             gamers.removeAll { it.pseudo() == email }
         }
+    }
+
+    fun gamerUsedLimitedAction(gamer: Gamer, action: LimitedUseAction) {
+        val limitedActionUsedForGamer = limitedActionUsedByGamers.getOrPut(gamer, { mutableMapOf() })
+        val limitedActionUse = limitedActionUsedForGamer.getOrPut(action.getType(), { 0 })
+        limitedActionUsedForGamer.put(action.getType(), limitedActionUse + 1)
+    }
+
+    fun getLimitedActionUsedBy(gamer: Gamer, actionType: LimitedUseActionType): Int {
+        return limitedActionUsedByGamers[gamer]?.get(actionType) ?: 0
     }
 }
 
