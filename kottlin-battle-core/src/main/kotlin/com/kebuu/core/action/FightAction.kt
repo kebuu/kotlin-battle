@@ -3,7 +3,7 @@ package com.kebuu.core.action
 import com.kebuu.core.action.execution.ActionExecutor
 import com.kebuu.core.action.validation.ActionValidator
 
-class FightAction(val attackedGamerPseudo: String): StepAction {
+data class FightAction(val attackedGamerPseudo: String): StepAction {
 
     override fun validateBy(validator: ActionValidator) = validator.validate(this)
 

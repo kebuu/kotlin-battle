@@ -7,9 +7,6 @@ import java.security.Principal
 fun Principal.toUser() : User {
     if (this is SocialAuthenticationToken) {
         val userDetails = this.principal
-
-        return if(userDetails is User) {
-            return userDetails
-        } else throw IllegalStateException("C'est quoi ce type de UserDetails tout pourri : ${userDetails.javaClass}")
+        return userDetails as? User ?: throw IllegalStateException("C'est quoi ce type de UserDetails tout pourri : ${userDetails.javaClass}")
     } else throw IllegalStateException("C'est quoi ce type de Principal tout pourri : ${this.javaClass}")
 }

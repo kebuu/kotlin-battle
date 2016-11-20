@@ -20,7 +20,7 @@ class GameInfoTest {
 
     lateinit var mapper: ObjectMapper
     lateinit var board: Board
-    val spawn = Spawn(RemoteGamer("test", "host", 0, restTemplate = RestTemplate()))
+    val spawn = Spawn(RemoteGamer("test", "host", 0, restOperations = RestTemplate()))
 
     @Before
     fun setUp() {

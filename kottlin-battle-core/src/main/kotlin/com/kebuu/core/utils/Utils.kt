@@ -17,3 +17,7 @@ fun Spawn.canMoveTo(position: Position): Boolean {
 operator fun Position.plus(position: Position): Position {
     return this.plusX(position.x).plusY(position.y)
 }
+
+fun equalsOnType(one: Any, another: Any?): Boolean {
+    return another != null && another.javaClass == one.javaClass
+}

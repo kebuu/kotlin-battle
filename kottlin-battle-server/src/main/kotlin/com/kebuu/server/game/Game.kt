@@ -189,7 +189,13 @@ open class Game(val config: GameConfig,
     }
 
     private fun processActions(gamerActions: List<GamerAction>) {
-        val sortedActions = gamerActions.sortedWith(GamerActionComparator)
+        val (allowedActions, forbiddenActions) = gamerActions.partition { it.action.javaClass !in level.forbiddenActions }
+        val sortedActions = allowedActions.sortedWith(GamerActionComparator)
+
+        forbiddenActions.forEach {
+            val gamerName = it.gamer.pseudo()
+            eventLogService.logEvent(GameEvent(gamerName, "$gamerName a oublié que certaines action n'étaient pas autorisées à ce niveau du jeu"))
+        }
 
         for (gamerAction in sortedActions) {
             val validator = ActionValidatorVisitor(this, gamerAction.gamer)

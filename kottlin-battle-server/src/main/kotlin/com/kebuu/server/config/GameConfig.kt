@@ -19,4 +19,6 @@ class GameConfig {
     val zPointPercentLostOnKill: Int = 5
     val zPointPercentLostOnHole: Int = 10
     val gamerLife: Int = 20
+    val initialZPoints: Int = 100
+    val adminMail = ""
 }
