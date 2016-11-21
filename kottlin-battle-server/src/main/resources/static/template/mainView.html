@@ -1,7 +1,7 @@
 <div ng-if="!$ctrl.isUserLogged()">
     <div ng-show="$ctrl.loading">Chargement...</div>
 
-    <form testGetNextAction="{{ '/signin/google' }}" method="post" ng-hide="$ctrl.loading">
+    <form action="{{ '/signin/google' }}" method="post" ng-hide="$ctrl.loading">
         Pour acc&eacute;der à l'application
         <button type="submit">
                Connectez-vous !

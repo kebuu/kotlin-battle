@@ -37,24 +37,26 @@ class GameInfoTest {
     @Test
     fun testSerializationDeserialization_step1() {
         val currentStep = 1
-        val gameInfo = GameInfo(spawn, board, Integer(currentStep))
+        val endStepNumber = 10
+        val gameInfo = GameInfo(spawn, board, currentStep, endStepNumber)
 
         val gameInfo2 = mapper.readValue(mapper.writeValueAsString(gameInfo), GameInfo::class.java)
 
         Assertions.assertThat(gameInfo2.board.dimension).isNotNull()
-        Assertions.assertThat(gameInfo2.currentStep).isEqualTo(currentStep)
+        Assertions.assertThat(gameInfo2.lastStepNumber).isEqualTo(endStepNumber)
         Assertions.assertThat(gameInfo2.board.boardItems).hasSize(4)
     }
 
     @Test
     fun testSerializationDeserialization_step2() {
         val currentStep = 2
-        val gameInfo = GameInfo(spawn, board, Integer(currentStep))
+        val endStepNumber = 10
+        val gameInfo = GameInfo(spawn, board, currentStep, endStepNumber)
 
         val gameInfo2 = mapper.readValue(mapper.writeValueAsString(gameInfo), GameInfo::class.java)
 
         Assertions.assertThat(gameInfo2.board.dimension).isNull()
-        Assertions.assertThat(gameInfo2.currentStep).isEqualTo(currentStep)
+        Assertions.assertThat(gameInfo2.lastStepNumber).isNull()
         Assertions.assertThat(gameInfo2.board.boardItems).hasSize(2)
         Assertions.assertThat(gameInfo2.board.boardItems.all { it is TreasureBoardItemDto || it is SpawnBoardItemDto  }).isTrue()
     }

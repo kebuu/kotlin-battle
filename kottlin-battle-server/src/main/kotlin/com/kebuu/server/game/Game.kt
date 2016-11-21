@@ -140,7 +140,7 @@ open class Game(val config: GameConfig,
 
     private fun getGamerAction(gamer: Gamer): GamerAction {
         val supplyAsync: CompletableFuture<GamerAction> = CompletableFuture.supplyAsync {
-            gamer.getNextAction(GameInfo(board.gamerSpawn(gamer), board, Integer(currentStep)))
+            gamer.getNextAction(GameInfo(board.gamerSpawn(gamer), board, currentStep, config.maxNumberOfStep))
         }
 
         return try {

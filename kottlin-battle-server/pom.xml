@@ -44,6 +44,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kebuu</groupId>
+            <artifactId>kotlin-battle-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>angularjs</artifactId>
             <version>1.5.8</version>

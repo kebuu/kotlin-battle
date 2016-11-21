@@ -1,7 +1,9 @@
-<table class="board">
-    <tr ng-repeat="row in $ctrl.rows() track by $index" ng-init="rowIndex = $index">
-        <td ng-repeat="column in $ctrl.columns() track by $index" ng-init="columnIndex = $index">
-            <board-cell cells="$ctrl.model.items" row="rowIndex" column="columnIndex"></board-cell>
-        </td>
-    </tr>
-</table>
+<div>
+    <table class="board">
+        <tr ng-repeat="row in $ctrl.rows() track by $index" ng-init="rowIndex = $index">
+            <td ng-repeat="column in $ctrl.columns() track by $index" ng-init="columnIndex = $index">
+                <board-cell cells="$ctrl.model.items" row="rowIndex" column="columnIndex"></board-cell>
+            </td>
+        </tr>
+    </table>
+</div>

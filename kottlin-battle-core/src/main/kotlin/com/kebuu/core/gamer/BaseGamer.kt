@@ -4,11 +4,11 @@ import com.kebuu.core.action.StepAction
 import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.dto.GameInfo
 
-abstract class BaseGamer(val pseudo: String, private var zPoints: Int = 100): Gamer {
+abstract class BaseGamer(val userId: String, private var zPoints: Int = 100): Gamer {
 
     private var life: Int = 0
 
-    override fun pseudo() = pseudo
+    override fun pseudo() = userId
 
     abstract fun doGetNextAction(gameInfo: GameInfo): StepAction
     abstract fun doGetSpawnAttributes(point: Int): SpawnAttributes
@@ -49,12 +49,12 @@ abstract class BaseGamer(val pseudo: String, private var zPoints: Int = 100): Ga
         if (this === other) return true
         if (other !is BaseGamer) return false
 
-        if (pseudo != other.pseudo) return false
+        if (userId != other.userId) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return pseudo.hashCode()
+        return userId.hashCode()
     }
 }

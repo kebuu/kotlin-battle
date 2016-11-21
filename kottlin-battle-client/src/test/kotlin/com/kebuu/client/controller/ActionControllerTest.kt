@@ -83,7 +83,7 @@ class ActionControllerTest {
         board.addItem(Treasure(Position(gameStep, gameStep)))
         board.addItem(spawn)
 
-        val gameInfo = GameInfo(spawn, board, Integer(gameStep))
+        val gameInfo = GameInfo(spawn, board, gameStep)
         return gameInfo
     }
 }

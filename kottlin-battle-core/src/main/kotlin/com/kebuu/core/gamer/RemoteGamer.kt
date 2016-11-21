@@ -15,14 +15,18 @@ class RemoteGamer constructor(pseudo: String,
                                       val restOperations: RestOperations): BaseGamer(pseudo) {
 
     override fun doGetNextAction(gameInfo: GameInfo): StepAction {
-        val responseEntity = restOperations.exchange("http://$host:$$port/actions/next", HttpMethod.PUT, HttpEntity(gameInfo), StepAction::class.java)
+        val ip = if(isIpv6(host)) "[$host]" else host
+        val responseEntity = restOperations.exchange("http://$ip:$port/actions/next", HttpMethod.PUT, HttpEntity(gameInfo), StepAction::class.java)
         return responseEntity.body
     }
 
     override fun doGetSpawnAttributes(point: Int): SpawnAttributes {
-        val uriBuilder = UriComponentsBuilder.fromHttpUrl("http://$host:$$port/spawn/update").queryParam("point", point)
+        val ip = if(isIpv6(host)) "[$host]" else host
+        val uriBuilder = UriComponentsBuilder.fromHttpUrl("http://$ip:$port/spawn/update").queryParam("point", point)
         val responseEntity = restOperations.exchange(uriBuilder.build(true).toUri(), HttpMethod.PUT, HttpEntity.EMPTY, SpawnAttributes::class.java)
         return responseEntity.body
     }
+
+    private fun isIpv6(host: String) = host.contains(":")
 }
 

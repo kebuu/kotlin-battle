@@ -10,19 +10,21 @@ class GameInfo {
 
     lateinit var position: Position
     lateinit var board: LightBoardDto
-    lateinit var currentStep: Integer
-    lateinit var life: Integer
+    var lastStepNumber: Int? = null
+    var gamerLife: Int = 0
+    var gamerZPoints: Int = 0
 
     constructor()
 
-    constructor(spawn: Spawn, board: Board, currentStep: Integer) {
+    constructor(spawn: Spawn, board: Board, currentStep: Int, lastStepNumber: Int? = null) {
         this.position = spawn.position
-        this.life = Integer(spawn.owner.getLife())
+        this.gamerLife = spawn.owner.getLife()
+        this.gamerZPoints = spawn.owner.getZPoints()
         this.board = createLightBoardDto(board, currentStep)
-        this.currentStep = currentStep
+        this.lastStepNumber = if(isFirstStep(currentStep)) lastStepNumber else null
     }
 
-    private fun createLightBoardDto(board: Board, currentStep: Integer): LightBoardDto {
+    private fun createLightBoardDto(board: Board, currentStep: Int): LightBoardDto {
         val dimension = if(isFirstStep(currentStep)) board.dimension else null
 
         val itemsDto = board.items.filter {
@@ -37,6 +39,6 @@ class GameInfo {
         return LightBoardDto(dimension, itemsDto)
     }
 
-    private fun isFirstStep(currentStep: Integer) = currentStep.toInt() == 1
+    private fun isFirstStep(currentStep: Int) = currentStep == 1
 
 }

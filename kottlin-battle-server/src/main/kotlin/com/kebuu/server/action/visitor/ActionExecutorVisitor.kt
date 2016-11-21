@@ -57,5 +57,5 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
     override fun execute(exceptionAction: ExceptionAction) = 
         "/!\\ ${gamer.pseudo()} ne fera rien ce tour-ci a cause d'une exception : ${exceptionAction.message}"
 
-    override fun execute(timeoutAction: TimeoutAction) = "/!\\ ${gamer.pseudo()} a été trop lent pour pouvoir jouer dans ce tour"
+    override fun execute(timeoutAction: TimeoutAction) = "/!\\\\ ${gamer.pseudo()} a été trop lent pour pouvoir jouer dans ce tour"
 }

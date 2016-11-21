@@ -60,7 +60,7 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
     }
 
     private fun runSteps(activeGame: Game) {
-        val stepCounter = AtomicInteger()
+        val stepCounter = AtomicInteger(1)
 
         val scheduledTask = executor.scheduleAtFixedRate({
             activeGame.runStep(stepCounter.andIncrement)

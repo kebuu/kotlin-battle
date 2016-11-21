@@ -1,6 +1,6 @@
 angular.module('app').component('gameView', {
     templateUrl: '/template/gameView.html',
-    controller: function($http, $scope) {
+    controller: function($http, $scope, eventLogService) {
         this.game = {};
 
         this.$onInit = function() {
@@ -18,12 +18,19 @@ angular.module('app').component('gameView', {
         this.connect = function() {
             var socket = new SockJS('/kotlin-battle');
             let stompClient = Stomp.over(socket);
+            stompClient.debug = null
 
             stompClient.connect({}, frame =>  {
                 stompClient.subscribe('/topic/active-game', data =>  {
                     $scope.$apply(() => {
                         this.game = JSON.parse(data.body);
-                        console.log(this.game);
+                    })
+                });
+
+                stompClient.subscribe('/topic/event', data =>  {
+                    $scope.$apply(() => {
+                        let eventLog = JSON.parse(data.body);
+                        eventLogService.addLog(eventLog);
                     })
                 });
             });
@@ -38,15 +45,11 @@ angular.module('app').component('gameView', {
         };
 
         this.register = function() {
-            $http.get("/games/register").catch(() => {
-                console.log(arguments);
-            });
+            $http.get("/games/register");
         };
 
         this.unregister = function() {
-            $http.get("/games/unregister").catch(() => {
-                console.log(arguments);
-            });
+            $http.get("/games/unregister");
         };
     },
     bindings: {

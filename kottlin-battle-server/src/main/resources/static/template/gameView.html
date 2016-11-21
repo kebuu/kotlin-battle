@@ -31,17 +31,18 @@
 
         <p>Joueurs inscrits : </p>
         <ol>
-            <li ng-repeat="gamer1 in $ctrl.game.gamers">{{gamer1.pseudo}}</li>
+            <li ng-repeat="gamer in $ctrl.game.gamers">{{gamer.shortName}}</li>
         </ol>
     </div>
 
     <div style="display: flex"  ng-if="['STARTED', 'STOPPED'].includes($ctrl.game.status)">
-        <div style="width: 100px">
+        <div>
             <gamers-ranking gamers="$ctrl.game.gamers"></gamers-ranking>
         </div>
         <div class="vr"></div>
         <div>
             <board model="$ctrl.game.board"></board>
+            <event-log></event-log>
         </div>
     </div>
 </div>

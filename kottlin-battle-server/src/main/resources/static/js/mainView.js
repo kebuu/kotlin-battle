@@ -6,7 +6,6 @@ angular.module('app').component('mainView', {
 
         this.$onInit = function() {
             $http.get(`/users/logged`).then((response) => {
-                console.log(response.data);
                 this.loggedUser = response.data;
             })
             .catch(() => {
