@@ -53,7 +53,7 @@ class ActionControllerTest {
         simpleTest(MoveAction(Position(1, 1)))
         simpleTest(DigAction())
         simpleTest(HealAction())
-        simpleTest(FightAction("pseudo"))
+        simpleTest(FightAction("gamerId"))
         simpleTest(LightSpeedMoveAction(MoveAction(Position(1, 1))))
         simpleTest(NoAction())
     }

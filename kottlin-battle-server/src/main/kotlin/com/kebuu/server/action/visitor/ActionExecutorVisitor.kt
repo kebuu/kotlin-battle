@@ -11,19 +11,19 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
 
     private val board = game.board
     
-    override fun execute(noAction: NoAction) = "${gamer.pseudo()} a eu peur, il n'a rien fait ce tour-ci !"
+    override fun execute(noAction: NoAction) = "${gamer.shortName()} a eu peur, il n'a rien fait ce tour-ci !"
 
     override fun execute(digAction: DigAction): String {
-        val gamerSpawn = game.getSpawn(gamer.pseudo())
+        val gamerSpawn = game.getSpawn(gamer.gamerId())
         val treasure = board.getTreasureAt(gamerSpawn.position)!!
         gamer.gainZPoints(treasure.zPoints)
         treasure.discoveredAtStep = game.currentStep
-        return "${gamer.pseudo()} a deterré ${treasure.zPoints} zPoints !!"
+        return "${gamer.shortName()} a deterré ${treasure.zPoints} zPoints !!"
     }
 
     override fun execute(fightAction: FightAction): String {
-        val gamerSpawn = game.getSpawn(gamer.pseudo())
-        val defenderSpawn = game.getSpawn(fightAction.attackedGamerPseudo)
+        val gamerSpawn = game.getSpawn(gamer.gamerId())
+        val defenderSpawn = game.getSpawn(fightAction.attackedGamerId)
         val defender = defenderSpawn.owner
 
         val effectiveAttackForce = Math.max(gamerSpawn.attributes.force - defenderSpawn.attributes.resistance, 1)
@@ -34,14 +34,14 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
             gamer.gainZPoints(zPointTakenOnKill)
         }
 
-        return "${gamer.pseudo()} inflige $effectiveAttackForce point(s) de dégat à $fightAction.attackedGamerPseudo"
+        return "${gamer.shortName()} inflige $effectiveAttackForce point(s) de dégat à ${defender.shortName()}"
     }
 
     override fun execute(healAction: HealAction): String {
-        val gamerSpawn = game.getSpawn(gamer.pseudo())
+        val gamerSpawn = game.getSpawn(gamer.gamerId())
         gamer.setLife(gamerSpawn.attributes.resistance)
         game.gamerUsedLimitedAction(gamer, healAction)
-        return "${gamer.pseudo()} récupère toute sa vie"
+        return "${gamer.shortName()} récupère toute sa vie"
     }
 
     override fun execute(lightSpeedMoveAction: LightSpeedMoveAction): String {
@@ -51,11 +51,11 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
 
     override fun execute(moveAction: MoveAction): String {
         board.gamerSpawn(gamer).moveTo(moveAction.goTo)
-        return "${gamer.pseudo()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
+        return "${gamer.shortName()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
     }
 
     override fun execute(exceptionAction: ExceptionAction) = 
-        "/!\\ ${gamer.pseudo()} ne fera rien ce tour-ci a cause d'une exception : ${exceptionAction.message}"
+        "/!\\ ${gamer.shortName()} ne fera rien ce tour-ci a cause d'une exception : ${exceptionAction.message}"
 
-    override fun execute(timeoutAction: TimeoutAction) = "/!\\\\ ${gamer.pseudo()} a été trop lent pour pouvoir jouer dans ce tour"
+    override fun execute(timeoutAction: TimeoutAction) = "/!\\\\ ${gamer.shortName()} a été trop lent pour pouvoir jouer dans ce tour"
 }

@@ -41,7 +41,7 @@ angular.module('app').component('gameView', {
         };
 
         this.isUserRegistered = function() {
-            return this.game.gamers.some(gamer => gamer.pseudo == this.user.email);
+            return this.game.gamers.some(gamer => gamer.gamerId == this.user.email);
         };
 
         this.register = function() {

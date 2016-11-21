@@ -1,5 +1,6 @@
 <div class="event-log">
+    <label>Filtre de log : </label><input ng-model="$ctrl.logFilter"/>
     <ul>
-        <li ng-repeat="log in $ctrl.logs">{{log.message}}</li>
+        <li ng-repeat="log in $ctrl.logs" ng-show="log.message.includes($ctrl.logFilter)">{{log.message}}</li>
     </ul>
 </div>

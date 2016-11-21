@@ -4,7 +4,9 @@ import com.kebuu.core.dto.GameInfo
 
 interface Gamer {
 
-    fun pseudo(): String
+    fun gamerId(): String
+
+    fun shortName(): String
 
     fun getNextAction(gameInfo: GameInfo): GamerAction
 

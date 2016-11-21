@@ -20,15 +20,15 @@ fun Game.canGamerUseLimitedAction(gamer: Gamer, action: LimitedUseAction): Boole
     return allowedActionOccurrence == null || actionUsedOccurrence < allowedActionOccurrence
 }
 
-fun Game.canGamerFight(gamer: Gamer, fightTargetPseudo: String): Boolean {
-    val attackerSpawn = getSpawn(gamer.pseudo())
+fun Game.canGamerFight(gamer: Gamer, fightTargetGamerId: String): Boolean {
+    val attackerSpawn = getSpawn(gamer.gamerId())
     val attackerPosition = attackerSpawn.position
-    val defenderPosition = getSpawn(fightTargetPseudo).position
+    val defenderPosition = getSpawn(fightTargetGamerId).position
     return attackerPosition.distanceFrom(defenderPosition) <= attackerSpawn.attributes.shootDistance
 }
 
 fun Game.canGamerDig(gamer: Gamer): Boolean {
-    val gamerSpawn = getSpawn(gamer.pseudo())
+    val gamerSpawn = getSpawn(gamer.gamerId())
     val treasure = board.getTreasureAt(gamerSpawn.position)
     return if (treasure == null || treasure.hasBeenDiscoveredBeforeStep(currentStep)) {
         false

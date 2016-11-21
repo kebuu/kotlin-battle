@@ -17,7 +17,7 @@ class ActionValidatorVisitor(val game: Game, val gamer: Gamer) : ActionValidator
         return if (game.canGamerDig(gamer)) {
             ok()
         } else {
-            withError("${gamer.pseudo()} n'a pas pigé les règles : il/elle creuse même quand il n'y a pas de trésor ...")
+            withError("${gamer.shortName()} n'a pas pigé les règles : il/elle creuse même quand il n'y a pas de trésor ...")
         }
     }
 
@@ -25,19 +25,19 @@ class ActionValidatorVisitor(val game: Game, val gamer: Gamer) : ActionValidator
         return if (game.canGamerUseLimitedAction(gamer, lightSpeedMoveAction)) {
             resultFrom(validateMove(lightSpeedMoveAction.moveAction))
         } else {
-            withError("Hé non ${gamer.pseudo()}, tu as déjà cramé ta reserve de ${lightSpeedMoveAction.javaClass.simpleName} ! ")
+            withError("Hé non ${gamer.shortName()}, tu as déjà cramé ta reserve de ${lightSpeedMoveAction.javaClass.simpleName} ! ")
         }
     }
 
     override fun validate(fightAction: FightAction): ActionValidationResult {
-        return if (!game.gamerExists(fightAction.attackedGamerPseudo)) {
-            withError("${gamer.pseudo()} a essayé de s'attaquer à un joueur fantôme : ${fightAction.attackedGamerPseudo}")
-        } else if (gamer.pseudo() == fightAction.attackedGamerPseudo) {
-            withError("${gamer.pseudo()} touche le fond, il cherche à s'attaquer lui-même")
-        } else if (game.canGamerFight(gamer, fightAction.attackedGamerPseudo)) {
+        return if (!game.gamerExists(fightAction.attackedGamerId)) {
+            withError("${gamer.shortName()} a essayé de s'attaquer à un joueur fantôme : ${fightAction.attackedGamerId}")
+        } else if (gamer.gamerId() == fightAction.attackedGamerId) {
+            withError("${gamer.shortName()} touche le fond, il cherche à s'attaquer lui-même")
+        } else if (game.canGamerFight(gamer, fightAction.attackedGamerId)) {
             ok()
         } else {
-            withError("Hey, ${gamer.pseudo()}, ${fightAction.attackedGamerPseudo} est trop loin pour toi !")
+            withError("Hey, ${gamer.shortName()}, ${fightAction.attackedGamerId} est trop loin pour toi !")
         }
     }
 
@@ -45,13 +45,13 @@ class ActionValidatorVisitor(val game: Game, val gamer: Gamer) : ActionValidator
         return if (game.canGamerUseLimitedAction(gamer, healAction)) {
             ok()
         } else {
-            withError("${gamer.pseudo()} a cru qu'il pouvait guérir à l'infini. L'erreur de débutant(e)")
+            withError("${gamer.shortName()} a cru qu'il pouvait guérir à l'infini. L'erreur de débutant(e)")
         }
     }
 
     override fun validate(moveAction: MoveAction): ActionValidationResult {
         return if (!game.spawnOf(gamer).canMoveTo(moveAction.goTo)) {
-            withError("Hey ${gamer.pseudo()} you can't go that far ! Dude !")
+            withError("Hey ${gamer.shortName()} you can't go that far ! Dude !")
         } else {
             resultFrom(validateMove(moveAction))
         }
@@ -59,9 +59,9 @@ class ActionValidatorVisitor(val game: Game, val gamer: Gamer) : ActionValidator
 
     fun validateMove(moveAction: MoveAction): ActionValidationResult {
         return if (!game.isOnBoard(moveAction.goTo)) {
-            withError("${gamer.pseudo()} a essayé de fuir le jeu ! Manque de courage ou erreur de programmation ?")
+            withError("${gamer.shortName()} a essayé de fuir le jeu ! Manque de courage ou erreur de programmation ?")
         } else if (game.isThereMountainOn(moveAction.goTo)) {
-            withError("${gamer.pseudo()} aurait voulu aller à la montagne... Il ne bougera pas ce tour-ci")
+            withError("${gamer.shortName()} aurait voulu aller à la montagne... Il ne bougera pas ce tour-ci")
         } else {
             ok()
         }

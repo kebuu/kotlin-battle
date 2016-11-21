@@ -71,14 +71,14 @@ class ActionValidatorVisitorTest {
     @Test
     fun validateFightAction() {
         assertThat(validator.validate(FightAction("unknownGamer")).isOk()).isFalse()
-        assertThat(validator.validate(FightAction(gamer1.pseudo())).isOk()).isFalse()
-        assertThat(validator.validate(FightAction(gamer2.pseudo())).isOk()).isTrue()
+        assertThat(validator.validate(FightAction(gamer1.gamerId())).isOk()).isFalse()
+        assertThat(validator.validate(FightAction(gamer2.gamerId())).isOk()).isTrue()
 
         gamer2Spawn.position = Position(1, 1)
-        assertThat(validator.validate(FightAction(gamer2.pseudo())).isOk()).isTrue()
+        assertThat(validator.validate(FightAction(gamer2.gamerId())).isOk()).isTrue()
 
         gamer2Spawn.position = Position(2, 1)
-        assertThat(validator.validate(FightAction(gamer2.pseudo())).isOk()).isFalse()
+        assertThat(validator.validate(FightAction(gamer2.gamerId())).isOk()).isFalse()
     }
 
     @Test

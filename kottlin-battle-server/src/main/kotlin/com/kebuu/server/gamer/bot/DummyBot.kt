@@ -10,7 +10,7 @@ import com.kebuu.core.bot.Bot
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.gamer.BaseGamer
 
-class DummyBot private constructor(pseudo: String, override val type: String): BaseGamer(pseudo), Bot {
+class DummyBot private constructor(gamerId: String, override val type: String): BaseGamer(gamerId), Bot {
 
     constructor(): this("DummyBot-" + Bot.COUNTER.andIncrement, "dummyBot")
 

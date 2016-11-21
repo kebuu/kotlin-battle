@@ -8,7 +8,8 @@ abstract class BaseGamer(val userId: String, private var zPoints: Int = 100): Ga
 
     private var life: Int = 0
 
-    override fun pseudo() = userId
+    override fun gamerId() = userId
+    override fun shortName() = userId.substringBefore('@')
 
     abstract fun doGetNextAction(gameInfo: GameInfo): StepAction
     abstract fun doGetSpawnAttributes(point: Int): SpawnAttributes

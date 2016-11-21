@@ -8,11 +8,11 @@ import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestOperations
 import org.springframework.web.util.UriComponentsBuilder
 
-class RemoteGamer constructor(pseudo: String,
-                                      val host: String,
-                                      val port: Int,
-                                      val avatarUrl: String? = null,
-                                      val restOperations: RestOperations): BaseGamer(pseudo) {
+class RemoteGamer constructor(gamerId: String,
+                              val host: String,
+                              val port: Int,
+                              val avatarUrl: String? = null,
+                              val restOperations: RestOperations): BaseGamer(gamerId) {
 
     override fun doGetNextAction(gameInfo: GameInfo): StepAction {
         val ip = if(isIpv6(host)) "[$host]" else host

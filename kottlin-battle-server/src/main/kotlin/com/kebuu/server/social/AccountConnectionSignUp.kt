@@ -7,7 +7,6 @@ import com.kebuu.server.service.UserRegistryService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.social.connect.Connection
 import org.springframework.social.connect.ConnectionSignUp
-import org.springframework.social.connect.UserProfile
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,11 +15,8 @@ class AccountConnectionSignUp @Autowired constructor(val userRegistryService: Us
     override fun execute(connection: Connection<*>): String {
         val profile = connection.fetchUserProfile()
         val role = if (gameConfig.adminMail.isNullOrBlank() || profile.email == gameConfig.adminMail) KotlinBattleConstant.FULL_ROLE_ADMIN else KotlinBattleConstant.FULL_ROLE_GAMER
-        val user = User(username(profile), connection.imageUrl, profile.email, role)
+        val user = User(profile.email, connection.imageUrl, role)
         userRegistryService.putUser(user)
         return user.email
     }
-
-    private fun  username(profile: UserProfile) = profile.email.substringBefore("@")
-
 }

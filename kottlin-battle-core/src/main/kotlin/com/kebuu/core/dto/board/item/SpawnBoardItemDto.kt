@@ -8,14 +8,14 @@ import kotlin.properties.Delegates
 
 class SpawnBoardItemDto: AbstractBoardItemDto {
 
-    var pseudo: String by Delegates.notNull()
+    var gamerId: String by Delegates.notNull()
     var gamerType: String by Delegates.notNull()
     var iconUrl: String? = null
 
     constructor()
 
     constructor(spawn: Spawn) {
-        pseudo = spawn.owner.pseudo()
+        gamerId = spawn.owner.gamerId()
         gamerType = extractGamerType(spawn.owner)
         iconUrl = extractIconUrl(spawn.owner)
     }

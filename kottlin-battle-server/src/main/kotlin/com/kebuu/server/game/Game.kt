@@ -44,16 +44,16 @@ open class Game(val config: GameConfig,
         this.gamers.addAll(gamers)
     }
 
-    fun getGamer(pseudo: String): Gamer {
-        return gamers.first { it.pseudo() == pseudo}
+    fun getGamer(gamerId: String): Gamer {
+        return gamers.first { it.gamerId() == gamerId }
     }
 
-    fun gamerExists(pseudo: String):Boolean {
-        return gamers.any { it.pseudo() == pseudo}
+    fun gamerExists(gamerId: String):Boolean {
+        return gamers.any { it.gamerId() == gamerId }
     }
 
-    fun getSpawn(pseudo: String): Spawn {
-        return board.gamerSpawn(getGamer(pseudo))
+    fun getSpawn(gamerId: String): Spawn {
+        return board.gamerSpawn(getGamer(gamerId))
     }
 
     fun init() {
@@ -83,7 +83,7 @@ open class Game(val config: GameConfig,
         logger.info("Getting next actions")
         val futureNextActions = mutableListOf<CompletableFuture<GamerAction>>()
         gamers.map { gamer ->
-            logger.info("Getting next actions for ${gamer.pseudo()}")
+            logger.info("Getting next actions for ${gamer.shortName()}")
             futureNextActions.add(CompletableFuture.supplyAsync {getGamerAction(gamer)} )
         }
 
@@ -95,8 +95,8 @@ open class Game(val config: GameConfig,
             if (board.doesPositionHasItemOfType<Hole>(spawnPosition)) {
                 gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnHole / 100)
                 board.gamerSpawn(gamer).moveTo(board.randomEmptyPosition())
-                eventLogService.logEvent(GameEvent(gamer.pseudo(),
-                        "${gamer.pseudo()} ne devait pas marcher bien droit, il vient de tomber dans un trou"))
+                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                        "${gamer.shortName()} ne devait pas marcher bien droit, il vient de tomber dans un trou"))
             }
         }
 
@@ -106,8 +106,8 @@ open class Game(val config: GameConfig,
                 gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnKill / 100)
                 gamerSpawn.moveTo(board.randomEmptyPosition())
                 gamer.setLife(config.gamerLife)
-                eventLogService.logEvent(GameEvent(gamer.pseudo(),
-                        "RIP ${gamer.pseudo()} !"))
+                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                        "RIP ${gamer.shortName()} !"))
             }
         }
     }
@@ -119,16 +119,16 @@ open class Game(val config: GameConfig,
 
         for (gamerSpawnAttributes in gamersSpawnAttributes) {
             val gamer = gamerSpawnAttributes.gamer
-            val spawn = getSpawn(gamer.pseudo())
+            val spawn = getSpawn(gamer.gamerId())
 
-            logger.info("Getting spawn update for ${gamer.pseudo()}")
+            logger.info("Getting spawn update for ${gamer.shortName()}")
             val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
             if (validationResult.isOk()) {
                 spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
             } else {
                 spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
-                eventLogService.logEvent(GameEvent(gamer.pseudo(),
-                        "${gamer.pseudo()} ne sait pas faire des additions correctement pour configurer son pion -> " +
+                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                        "${gamer.shortName()} ne sait pas faire des additions correctement pour configurer son pion -> " +
                                 "mise à jour aléatoire"))
             }
         }
@@ -193,7 +193,7 @@ open class Game(val config: GameConfig,
         val sortedActions = allowedActions.sortedWith(GamerActionComparator)
 
         forbiddenActions.forEach {
-            val gamerName = it.gamer.pseudo()
+            val gamerName = it.gamer.gamerId()
             eventLogService.logEvent(GameEvent(gamerName, "$gamerName a oublié que certaines action n'étaient pas autorisées à ce niveau du jeu"))
         }
 
@@ -205,7 +205,7 @@ open class Game(val config: GameConfig,
             val validationResult = action.validateBy(validator)
             if (validationResult.isOk()) {
                 val executionMessage = action.executeBy(executor)
-                eventLogService.logEvent(GameEvent(gamerAction.gamer.pseudo(), executionMessage))
+                eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(), executionMessage))
             }
         }
     }
@@ -224,7 +224,7 @@ open class Game(val config: GameConfig,
         if (isStarted()) {
             throw GameAlreadyStartedException()
         } else {
-            gamers.removeAll { it.pseudo() == email }
+            gamers.removeAll { it.gamerId() == email }
         }
     }
 

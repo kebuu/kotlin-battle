@@ -4,19 +4,15 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.social.security.SocialUserDetails
 
-class User(val pseudo: String, val avatarUrl: String?, val email: String, val role: String) : SocialUserDetails {
+class User(val email: String, val avatarUrl: String?, val role: String) : SocialUserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        val authorities = mutableListOf<GrantedAuthority>()
-        if (pseudo == "christophe.tardella") {
-            authorities.add(SimpleGrantedAuthority("ROLE_ADMIN"))
-        }
-        return authorities
+        return mutableListOf(SimpleGrantedAuthority(role))
     }
 
-    override fun getUsername() = pseudo
+    override fun getUsername() = email
     override fun isCredentialsNonExpired() = false
-    override fun getUserId() = username
+    override fun getUserId() = email
     override fun isAccountNonExpired() = false
     override fun isAccountNonLocked() = true
     override fun isEnabled() = true
@@ -26,12 +22,12 @@ class User(val pseudo: String, val avatarUrl: String?, val email: String, val ro
         if (this === other) return true
         if (other !is User) return false
 
-        if (pseudo != other.pseudo) return false
+        if (email != other.email) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return pseudo.hashCode()
+        return email.hashCode()
     }
 }

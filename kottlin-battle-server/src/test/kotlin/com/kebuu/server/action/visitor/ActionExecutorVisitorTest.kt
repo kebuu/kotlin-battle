@@ -72,17 +72,17 @@ class ActionExecutorVisitorTest {
     fun executeFightAction() {
         gamer2.setLife(4)
 
-        executor.execute(FightAction(gamer2.pseudo()))
+        executor.execute(FightAction(gamer2.gamerId()))
         assertThat(gamer2.getLife()).isEqualTo(2)
         assertThat(gamer1.getZPoints()).isEqualTo(100)
 
-        executor.execute(FightAction(gamer2.pseudo()))
+        executor.execute(FightAction(gamer2.gamerId()))
         assertThat(gamer2.getLife()).isEqualTo(0)
         assertThat(gamer1.getZPoints()).isEqualTo(115)
 
         gamer2.setLife(4)
         gamer2Spawn.attributes.resistance = 10
-        executor.execute(FightAction(gamer2.pseudo()))
+        executor.execute(FightAction(gamer2.gamerId()))
         assertThat(gamer2.getLife()).isEqualTo(3)
         assertThat(gamer1.getZPoints()).isEqualTo(115)
     }
