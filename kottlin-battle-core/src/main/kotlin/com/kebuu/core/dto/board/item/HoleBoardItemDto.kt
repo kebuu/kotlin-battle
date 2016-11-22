@@ -1,3 +1,5 @@
 package com.kebuu.core.dto.board.item
 
-class HoleBoardItemDto: AbstractBoardItemDto()
+import com.kebuu.core.Position
+
+class HoleBoardItemDto(position: Position = Position.ORIGIN): AbstractBoardItemDto(position)

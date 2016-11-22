@@ -34,7 +34,7 @@ data class Board(val dimension: Dimension = Dimension(),
     }
 
     fun randomEmptyPosition(): Position {
-        val positions = this.iterator().asSequence().toList()
+        val positions = dimension.iterator().asSequence().toList()
         Collections.shuffle(positions)
 
         val itemsByPosition = itemsByPosition()
@@ -45,17 +45,7 @@ data class Board(val dimension: Dimension = Dimension(),
         items.add(boardItem)
     }
 
-    override fun iterator(): Iterator<Position> {
-        val positions = mutableListOf<Position>()
-
-        for(i in 0..dimension.y) {
-            for(j in 0..dimension.x) {
-                positions.add(Position(j, i))
-            }
-        }
-
-        return positions.iterator()
-    }
+    override fun iterator(): Iterator<Position> = dimension.iterator()
 
     fun gamerSpawn(gamer: Gamer): Spawn {
         return items.first { it is Spawn && it.owner == gamer } as Spawn
@@ -67,6 +57,17 @@ data class Board(val dimension: Dimension = Dimension(),
 
     inline fun <reified T> doesPositionHasItemOfType(position: Position): Boolean {
         return itemsAt(position).any { it is T }
+    }
+
+    fun cleanFoundTreasures() {
+        val itemIterator = items.iterator()
+        while (itemIterator.hasNext()) {
+            val item = itemIterator.next()
+
+            if (item is Treasure && item.hasBeenFound) {
+                itemIterator.remove()
+            }
+        }
     }
 }
 

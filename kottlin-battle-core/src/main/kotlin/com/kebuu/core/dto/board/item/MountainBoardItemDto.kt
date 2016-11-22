@@ -1,3 +1,5 @@
 package com.kebuu.core.dto.board.item
 
-class MountainBoardItemDto: AbstractBoardItemDto()
+import com.kebuu.core.Position
+
+class MountainBoardItemDto(position: Position = Position.ORIGIN): AbstractBoardItemDto(position)

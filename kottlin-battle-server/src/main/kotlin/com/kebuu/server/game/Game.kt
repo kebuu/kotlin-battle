@@ -110,6 +110,8 @@ open class Game(val config: GameConfig,
                         "RIP ${gamer.shortName()} !"))
             }
         }
+
+        board.cleanFoundTreasures()
     }
 
     private fun updateSpawns() {
@@ -155,9 +157,9 @@ open class Game(val config: GameConfig,
 
     private fun getInitialSpawnAttributes(): List<GamerSpawnAttributes> {
         return if (level.enableSpawnUpdate) {
-            getGamersSpawnUpdate(0)
+            getGamersSpawnUpdate(random.nextInt(4) + 3)
         } else {
-            gamers.map { GamerSpawnAttributes(it, SpawnAttributes()) }
+            gamers.map { GamerSpawnAttributes(it, SpawnAttributes(2)) }
         }
     }
 
@@ -206,6 +208,8 @@ open class Game(val config: GameConfig,
             if (validationResult.isOk()) {
                 val executionMessage = action.executeBy(executor)
                 eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(), executionMessage))
+            } else {
+                eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(), validationResult.getValidationErrorMessages().toString()))
             }
         }
     }

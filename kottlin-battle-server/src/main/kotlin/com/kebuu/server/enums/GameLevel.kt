@@ -8,11 +8,12 @@ import com.kebuu.core.board.Hole
 import com.kebuu.core.board.Mountain
 import com.kebuu.core.board.Treasure
 import com.kebuu.core.gamer.Gamer
-import com.kebuu.server.enums.BoardItemGenerator.treasureGenerator
 import com.kebuu.server.enums.BoardItemGenerator.holeGenerator
 import com.kebuu.server.enums.BoardItemGenerator.mountainGenerator
+import com.kebuu.server.enums.BoardItemGenerator.treasureGenerator
 import com.kebuu.server.game.Game
 import com.kebuu.server.gamer.bot.DummyBot
+import com.kebuu.server.gamer.bot.GreedyBot
 import com.kebuu.server.gamer.bot.ImmobileBot
 import java.util.*
 
@@ -24,7 +25,7 @@ enum class GameLevel(val enableSpawnUpdate: Boolean,
     LEVEL_0(false,
             listOf(FightAction::class.java, LimitedUseAction::class.java),
             mapOf(treasureGenerator to 50),
-            mapOf(BotGenerator.dummyGenerator to 2)),
+            mapOf(BotGenerator.dummyGenerator to 2, BotGenerator.greedyGenerator to 2)),
     LEVEL_1(false,
             listOf(FightAction::class.java),
             mapOf(treasureGenerator to 20, holeGenerator to 10, mountainGenerator to 10),
@@ -51,4 +52,5 @@ object BotGenerator {
 
     val dummyGenerator =  { game: Game -> DummyBot() }
     val immobileGenerator =  { game: Game -> ImmobileBot() }
+    val greedyGenerator =  { game: Game -> GreedyBot() }
 }

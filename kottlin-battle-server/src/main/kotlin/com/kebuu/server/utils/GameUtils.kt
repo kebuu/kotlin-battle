@@ -30,9 +30,5 @@ fun Game.canGamerFight(gamer: Gamer, fightTargetGamerId: String): Boolean {
 fun Game.canGamerDig(gamer: Gamer): Boolean {
     val gamerSpawn = getSpawn(gamer.gamerId())
     val treasure = board.getTreasureAt(gamerSpawn.position)
-    return if (treasure == null || treasure.hasBeenDiscoveredBeforeStep(currentStep)) {
-        false
-    } else {
-        true
-    }
+    return treasure != null
 }

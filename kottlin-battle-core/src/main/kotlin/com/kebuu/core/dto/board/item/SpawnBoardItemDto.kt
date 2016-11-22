@@ -1,6 +1,8 @@
 package com.kebuu.core.dto.board.item
 
+import com.kebuu.core.Position
 import com.kebuu.core.board.spawn.Spawn
+import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.bot.Bot
 import com.kebuu.core.gamer.Gamer
 import com.kebuu.core.gamer.RemoteGamer
@@ -10,13 +12,15 @@ class SpawnBoardItemDto: AbstractBoardItemDto {
 
     var gamerId: String by Delegates.notNull()
     var gamerType: String by Delegates.notNull()
+    var spawnAttributes: SpawnAttributes by Delegates.notNull()
     var iconUrl: String? = null
 
-    constructor()
+    constructor(): super(Position.ORIGIN)
 
-    constructor(spawn: Spawn) {
+    constructor(spawn: Spawn): super(spawn.position) {
         gamerId = spawn.owner.gamerId()
         gamerType = extractGamerType(spawn.owner)
+        spawnAttributes = spawn.attributes
         iconUrl = extractIconUrl(spawn.owner)
     }
 

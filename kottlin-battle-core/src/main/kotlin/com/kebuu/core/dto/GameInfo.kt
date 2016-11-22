@@ -4,12 +4,14 @@ import com.kebuu.core.Position
 import com.kebuu.core.board.Board
 import com.kebuu.core.board.Treasure
 import com.kebuu.core.board.spawn.Spawn
+import com.kebuu.core.board.spawn.SpawnAttributes
 import com.kebuu.core.dto.board.item.BoardItemDtoFactory
 
 class GameInfo {
 
     lateinit var position: Position
     lateinit var board: LightBoardDto
+    lateinit var spawnAttributes: SpawnAttributes
     var lastStepNumber: Int? = null
     var gamerLife: Int = 0
     var gamerZPoints: Int = 0
@@ -18,6 +20,7 @@ class GameInfo {
 
     constructor(spawn: Spawn, board: Board, currentStep: Int, lastStepNumber: Int? = null) {
         this.position = spawn.position
+        this.spawnAttributes = spawn.attributes
         this.gamerLife = spawn.owner.getLife()
         this.gamerZPoints = spawn.owner.getZPoints()
         this.board = createLightBoardDto(board, currentStep)

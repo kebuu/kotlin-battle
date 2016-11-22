@@ -2,6 +2,7 @@ package com.kebuu.core.dto.board.item
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.kebuu.core.Position
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
@@ -10,4 +11,4 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
         JsonSubTypes.Type(value = SpawnBoardItemDto::class, name = "spawn"),
         JsonSubTypes.Type(value = TreasureBoardItemDto::class, name = "treasure")
 )
-abstract class AbstractBoardItemDto
+abstract class AbstractBoardItemDto(val position: Position)

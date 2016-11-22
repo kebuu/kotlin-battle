@@ -61,11 +61,8 @@ class ActionValidatorVisitorTest {
         board.addItem(treasure)
         assertThat(validator.validate(DigAction()).isOk()).isTrue()
 
-        treasure.discoveredAtStep = 0
+        treasure.hasBeenFound = true
         assertThat(validator.validate(DigAction()).isOk()).isTrue()
-
-        game.currentStep = 1
-        assertThat(validator.validate(DigAction()).isOk()).isFalse()
     }
 
     @Test

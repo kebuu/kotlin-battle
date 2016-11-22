@@ -2,10 +2,12 @@ package com.kebuu.core.board.spawn
 
 import java.util.*
 
-data class SpawnAttributes(var speed: Int = 1,
-                           var force: Int = 1,
-                           var resistance: Int = 1,
-                           var shootDistance: Int = 1) {
+data class SpawnAttributes(var speed: Int = 0,
+                           var force: Int = 0,
+                           var resistance: Int = 0,
+                           var shootDistance: Int = 0) {
+
+    constructor(point: Int): this(point, point, point, point)
 
     val sumPoints: Int
         get() = speed + force + resistance + shootDistance

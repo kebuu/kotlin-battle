@@ -17,7 +17,7 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
         val gamerSpawn = game.getSpawn(gamer.gamerId())
         val treasure = board.getTreasureAt(gamerSpawn.position)!!
         gamer.gainZPoints(treasure.zPoints)
-        treasure.discoveredAtStep = game.currentStep
+        treasure.hasBeenFound = true
         return "${gamer.shortName()} a deterré ${treasure.zPoints} zPoints !!"
     }
 

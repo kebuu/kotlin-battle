@@ -51,6 +51,11 @@
     background-size: 40px 40px;
 }
 
+.greedyBot {
+    background: url('../image/android-blue.png') no-repeat transparent;
+    background-size: 40px 40px;
+}
+
 .vr {
     width: 1px;
     border-left: 1px solid black;
