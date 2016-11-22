@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/spawn")
-internal class SpawnController @Autowired constructor(val spawnService: SpawnService) {
+class SpawnController @Autowired constructor(val spawnService: SpawnService) {
 
     @GetMapping("/update")
     fun spawnUpdate(@RequestParam point: Int): SpawnAttributes {
