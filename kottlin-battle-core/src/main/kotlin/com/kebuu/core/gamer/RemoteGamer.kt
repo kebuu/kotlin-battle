@@ -23,7 +23,7 @@ class RemoteGamer constructor(gamerId: String,
     override fun doGetSpawnAttributes(point: Int): SpawnAttributes {
         val ip = if(isIpv6(host)) "[$host]" else host
         val uriBuilder = UriComponentsBuilder.fromHttpUrl("http://$ip:$port/spawn/update").queryParam("point", point)
-        val responseEntity = restOperations.exchange(uriBuilder.build(true).toUri(), HttpMethod.PUT, HttpEntity.EMPTY, SpawnAttributes::class.java)
+        val responseEntity = restOperations.exchange(uriBuilder.build(true).toUri(), HttpMethod.GET, HttpEntity.EMPTY, SpawnAttributes::class.java)
         return responseEntity.body
     }
 

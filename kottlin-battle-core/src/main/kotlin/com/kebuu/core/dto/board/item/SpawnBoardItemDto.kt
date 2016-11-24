@@ -12,6 +12,7 @@ class SpawnBoardItemDto: AbstractBoardItemDto {
 
     var gamerId: String by Delegates.notNull()
     var gamerType: String by Delegates.notNull()
+    var gamerShortName: String by Delegates.notNull()
     var spawnAttributes: SpawnAttributes by Delegates.notNull()
     var iconUrl: String? = null
 
@@ -19,6 +20,7 @@ class SpawnBoardItemDto: AbstractBoardItemDto {
 
     constructor(spawn: Spawn): super(spawn.position) {
         gamerId = spawn.owner.gamerId()
+        gamerShortName = spawn.owner.shortName()
         gamerType = extractGamerType(spawn.owner)
         spawnAttributes = spawn.attributes
         iconUrl = extractIconUrl(spawn.owner)

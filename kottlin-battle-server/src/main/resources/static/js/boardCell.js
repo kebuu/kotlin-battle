@@ -55,6 +55,14 @@ angular.module('app').component('boardCell', {
             });
         };
 
+        this.cellTitle = function(){
+            return cellItems.filter(el => {
+                return el.type == constants.SPAWN_TYPE;
+            }).map(spawn => {
+                return spawn.gamerShortName
+            }).join(",");
+        };
+
         this.hasType = function(type) {
             return cellItems.findIndex(el => {
                 return el.type == type;

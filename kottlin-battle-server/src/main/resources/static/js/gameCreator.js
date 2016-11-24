@@ -7,7 +7,8 @@ angular.module('app').component('gameCreator', {
         };
 
         this.createGame = function(gameLevel) {
-            $http.get("/games/new", {gameLevel: gameLevel});
+            console.log(gameLevel);
+            $http.get("/games/new", {params: {gameLevel: gameLevel}});
         };
     },
     bindings: {

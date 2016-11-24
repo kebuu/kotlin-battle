@@ -10,6 +10,7 @@ import com.kebuu.core.bot.Bot
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.dto.board.item.TreasureBoardItemDto
 import com.kebuu.core.gamer.BaseGamer
+import com.kebuu.server.config.GameConfig
 
 class GreedyBot private constructor(gamerId: String, override val type: String): BaseGamer(gamerId), Bot {
 

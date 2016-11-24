@@ -59,6 +59,22 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
         runSteps(activeGame)
     }
 
+    fun resumeLast() {
+        logger.info("Resuming last game")
+
+        val lastStoppedGame = games.lastOrNull { it.status == GameStatus.STOPPED }
+
+        if (lastStoppedGame != null) {
+            val game = Game(gameConfig, eventLogService, lastStoppedGame.level)
+            val remoteGamers = lastStoppedGame.gamers.filter{ it is RemoteGamer }
+            game.addGamers(*remoteGamers.toTypedArray())
+            games.add(game)
+            webSocketService.sendGame(activeGame())
+        } else {
+            throw IllegalStateException("Pas de game à rejouer")
+        }
+    }
+
     private fun runSteps(activeGame: Game) {
         val stepCounter = AtomicInteger(1)
 
@@ -103,8 +119,9 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
     }
 
     fun stop() {
-        activeGame().end()
+        val activeGame = activeGame()
+        mappedScheduledTask[activeGame]?.cancel(false)
+        activeGame.end()
+        webSocketService.sendGame(activeGame)
     }
 }
-
-

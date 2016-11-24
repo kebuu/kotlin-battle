@@ -2,6 +2,8 @@ angular.module('app').component('gameView', {
     templateUrl: '/template/gameView.html',
     controller: function($http, $scope, eventLogService) {
         this.game = {};
+        this.history = [];
+        this.historyStep = 0;
 
         this.$onInit = function() {
             $http.get(`/games/active`).then((response) => {
@@ -9,11 +11,36 @@ angular.module('app').component('gameView', {
             });
 
             this.connect();
-        }
+        };
 
         this.onStartPressed = function() {
             $http.get(`/games/start`);
-        }
+            this.history.length = 0;
+        };
+
+        this.onStopPressed = function() {
+            $http.get(`/games/stop`);
+        };
+
+        this.onResumePressed = function() {
+            $http.get(`/games/resume`);
+            this.history.length = 0;
+            eventLogService.clear();
+        };
+
+        this.onHistoryBack = function() {
+            if(this.historyStep > 0) {
+                this.historyStep -= 1;
+                this.game.board = this.history[this.historyStep].board;
+            }
+        };
+
+        this.onHistoryNext = function() {
+            if(this.historyStep < this.history.length - 1) {
+                this.historyStep += 1;
+                this.game.board = this.history[this.historyStep].board;
+            }
+        };
 
         this.connect = function() {
             var socket = new SockJS('/kotlin-battle');
@@ -23,14 +50,23 @@ angular.module('app').component('gameView', {
             stompClient.connect({}, frame =>  {
                 stompClient.subscribe('/topic/active-game', data =>  {
                     $scope.$apply(() => {
-                        this.game = JSON.parse(data.body);
+                        let newGameState = JSON.parse(data.body);
+                        this.game = newGameState;
+
+                        if(this.game.status == 'STARTED') {
+                            this.history.push(newGameState);
+                            this.historyStep = this.game.currentStep;
+                        }
                     })
                 });
 
                 stompClient.subscribe('/topic/event', data =>  {
                     $scope.$apply(() => {
                         let eventLog = JSON.parse(data.body);
-                        eventLogService.addLog(eventLog);
+                        eventLogService.addLog({
+                            username: eventLog.username,
+                            message: (this.game.currentStep + 1) + '. ' + eventLog.message
+                        });
                     })
                 });
             });

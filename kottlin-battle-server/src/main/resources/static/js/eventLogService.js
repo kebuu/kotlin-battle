@@ -8,6 +8,10 @@ angular.module('app').factory('eventLogService', function() {
 
         getLogs: function() {
             return logs;
+        },
+
+        clear: function() {
+            logs.length = 0;
         }
     };
 

@@ -50,8 +50,12 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
     }
 
     override fun execute(moveAction: MoveAction): String {
-        board.gamerSpawn(gamer).moveTo(moveAction.goTo)
-        return "${gamer.shortName()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
+        return if (gamer.isDead()) {
+            "${gamer.shortName()} s'apprêtait à bouger quand il s'est fait tuer..."
+        } else {
+            board.gamerSpawn(gamer).moveTo(moveAction.goTo)
+            "${gamer.shortName()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
+        }
     }
 
     override fun execute(exceptionAction: ExceptionAction) = 

@@ -33,14 +33,13 @@ class DummyBot private constructor(gamerId: String, override val type: String): 
         return operations.map { it(gameInfo.position) }
                 .map(::MoveAction)
                 .firstOrNull {
-                    it.goTo.x in 0..(boardDimension.x - 1)  &&
-                            it.goTo.y in 0..(boardDimension.y - 1)
+                    it.goTo.x in 0..(boardDimension.x - 1)  && it.goTo.y in 0..(boardDimension.y - 1)
                 }
                 ?: NoAction()
     }
 
     override fun doGetSpawnAttributes(point: Int): SpawnAttributes {
-        return SpawnAttributes()
+        return SpawnAttributes(speed = 1)
     }
 }
 

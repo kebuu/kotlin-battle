@@ -10,9 +10,9 @@ object ActionComparator: Comparator<StepAction> {
     val actionPriorities = mapOf(
         HealAction::class.java to 100,
         LightSpeedMoveAction::class.java to 200,
-        MoveAction::class.java to 300,
-        DigAction::class.java to 400,
-        FightAction::class.java to 500
+        FightAction::class.java to 300,
+        MoveAction::class.java to 400,
+        DigAction::class.java to 500
     )
 
 

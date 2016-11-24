@@ -13,7 +13,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         val springSocialConfigurer = SpringSocialConfigurer()
 
         http.authorizeRequests().antMatchers("/", "/signin/**").permitAll()
-                .antMatchers("/games/new", "/games/start", "/games/stop").hasRole(KotlinBattleConstant.ROLE_ADMIN)
+                .antMatchers("/games/new", "/games/start", "/games/stop", "/games/resume").hasRole(KotlinBattleConstant.ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and().csrf().disable()
         .apply(springSocialConfigurer)

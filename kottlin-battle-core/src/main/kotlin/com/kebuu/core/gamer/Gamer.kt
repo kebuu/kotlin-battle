@@ -27,5 +27,7 @@ interface Gamer {
     fun setLife(life: Int)
 
     fun isDead() = getLife() == 0
+
+    fun setZPoints(initialZPoints: Int)
 }
 

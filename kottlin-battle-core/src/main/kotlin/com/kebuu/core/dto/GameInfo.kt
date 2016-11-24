@@ -12,6 +12,7 @@ class GameInfo {
     lateinit var position: Position
     lateinit var board: LightBoardDto
     lateinit var spawnAttributes: SpawnAttributes
+    lateinit var gamerId: String
     var lastStepNumber: Int? = null
     var gamerLife: Int = 0
     var gamerZPoints: Int = 0
@@ -21,6 +22,7 @@ class GameInfo {
     constructor(spawn: Spawn, board: Board, currentStep: Int, lastStepNumber: Int? = null) {
         this.position = spawn.position
         this.spawnAttributes = spawn.attributes
+        this.gamerId = spawn.owner.gamerId()
         this.gamerLife = spawn.owner.getLife()
         this.gamerZPoints = spawn.owner.getZPoints()
         this.board = createLightBoardDto(board, currentStep)

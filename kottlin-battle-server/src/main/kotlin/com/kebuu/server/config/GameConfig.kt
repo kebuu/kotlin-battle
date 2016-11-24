@@ -14,11 +14,11 @@ class GameConfig {
     var maxNumberOfStep = 10
     var limitedActionAllowedOccurrence = mutableMapOf<LimitedUseAction.LimitedUseActionType, Int>()
     val gameStepDurationSecond: Long = 1
-    val updateSpawnInterval: Int = 15
+    val updateSpawnInterval: Int = 5
     val zPointPercentTakenOnKill: Int = 15
     val zPointPercentLostOnKill: Int = 5
     val zPointPercentLostOnHole: Int = 10
-    val gamerLife: Int = 20
+    val gamerLife: Int = 2
     val initialZPoints: Int = 100
     val adminMail = ""
 }

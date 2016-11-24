@@ -60,12 +60,13 @@ open class Game(val config: GameConfig,
         status = GameStatus.STARTED
 
         val gamersSpawnAttributes = getInitialSpawnAttributes()
-        gamersSpawnAttributes
-                .map { Spawn(it.gamer, it.spawnAttributes, board.randomEmptyPosition()) }
-                .forEach {
-                    it.owner.setLife(config.gamerLife)
-                    board.addItem(it)
-                }
+        gamersSpawnAttributes.map { Spawn(it.gamer, it.spawnAttributes, board.randomEmptyPosition()) }
+            .forEach {
+                it.owner.setLife(config.gamerLife)
+                board.addItem(it)
+            }
+
+        gamers.forEach { it.setZPoints(config.initialZPoints) }
     }
 
     fun end() {
@@ -76,7 +77,7 @@ open class Game(val config: GameConfig,
         logger.info("Running step $step")
         currentStep = step
 
-        if (level.enableSpawnUpdate && currentStep % config.updateSpawnInterval == 0) {
+        if (level.enableSpawnUpdate && (currentStep - 1) % config.updateSpawnInterval == 0) {
             updateSpawns()
         }
 
@@ -116,7 +117,7 @@ open class Game(val config: GameConfig,
 
     private fun updateSpawns() {
         logger.info("Getting spawn update")
-        val spawnAttributesUpdatePoints = random.nextInt(5) + 1
+        val spawnAttributesUpdatePoints = random.nextInt(5) + 3
         val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
 
         for (gamerSpawnAttributes in gamersSpawnAttributes) {
@@ -127,6 +128,8 @@ open class Game(val config: GameConfig,
             val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
             if (validationResult.isOk()) {
                 spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
+                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                        "${gamer.shortName()} a maintenant les caractéristiques suivantes : ${spawn.attributes}"))
             } else {
                 spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
                 eventLogService.logEvent(GameEvent(gamer.gamerId(),
@@ -151,6 +154,7 @@ open class Game(val config: GameConfig,
             supplyAsync.cancel(true)
             GamerAction(gamer, TimeoutAction())
         } catch(e: Exception) {
+            e.printStackTrace()
             GamerAction(gamer, ExceptionAction(e.message.orEmpty()))
         }
     }
@@ -183,9 +187,11 @@ open class Game(val config: GameConfig,
         return try {
             supplyAsync.get(config.gamerResponseTimeout, config.gamerResponseTimeoutTimeUnit)
         } catch(e: TimeoutException) {
+            e.printStackTrace()
             supplyAsync.cancel(true)
             GamerSpawnAttributes(gamer, currentAttributes.updateRandomly(point))
         } catch(e: Exception) {
+            e.printStackTrace()
             GamerSpawnAttributes(gamer, currentAttributes.updateRandomly(point))
         }
     }

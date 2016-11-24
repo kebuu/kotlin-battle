@@ -43,6 +43,11 @@ class GameController @Autowired constructor(val gameManager: GameManager) {
         gameManager.stop()
     }
 
+    @GetMapping("/resume")
+    fun resumeLasteGame() {
+        gameManager.resumeLast()
+    }
+
     @GetMapping("/register")
     fun register(@RequestParam(defaultValue = "8081") port: Int, principal: Principal, request: HttpServletRequest): ResponseEntity<Void> {
         return try {

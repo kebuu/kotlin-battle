@@ -1,27 +1,36 @@
 <div ng-if="!$ctrl.game.status">
-    Aucun jeu en cours
-
-    cr&eacute;er un nouveau jeu
-    <game-creator></game-creator>
+    <p>Aucun jeu en cours !</p>
+    <div>
+        Cr&eacute;er un nouveau jeu : <br/>
+        <game-creator></game-creator>
+    </div>
 </div>
 <div ng-if="!!$ctrl.game.status">
-    {{$ctrl.isUserAdmin()}}
-    {{$ctrl.isUserRegistered()}}
-    {{$ctrl.user}}
-    {{$ctrl.game.gamers}}
 
-    <h3>Jeu en cours ({{$ctrl.game.status}})</h3>
+    <h3>Jeu en cours (niveau {{$ctrl.game.level}})</h3>
 
-    <button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status != 'STARTED'">Start</button>
+    <button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status == 'CREATED'">D&eacute;marrer</button>
+    <button ng-click="$ctrl.onStopPressed()" ng-if="$ctrl.game.status == 'STARTED'">Arr&ecirc;;ter</button>
+    <div ng-if="$ctrl.game.status == 'STOPPED'">
+        <button ng-click="$ctrl.onResumePressed()">Recommencer</button> ou cr&eacute;er un nouveau jeu : <game-creator></game-creator>
+    </div>
 
     <p>
-        Nombre de joueur: {{$ctrl.game.gamers.length}}
+       <label>Etat</label> : {{$ctrl.game.status}}
     </p>
     <p>
-        Step en cours: {{$ctrl.game.currentStep}}
+        <label>Step en cours</label> : {{$ctrl.game.currentStep}}
     </p>
 
-    <div style="display: flex" ng-if="$ctrl.game.status == 'CREATED'">
+    <div ng-if="$ctrl.game.status == 'CREATED'">
+        <p><label>Joueurs inscrits</label> : <span ng-if="$ctrl.game.gamers.length === 0">Aucun joueur inscrit</span> </p>
+
+        <ol>
+            <li ng-repeat="gamer in $ctrl.game.gamers">
+                {{gamer.shortName}} <img style="width: 50px;vertical-align: middle" ng-src="{{gamer.avatarUrl}}" />
+            </li>
+        </ol>
+
         <p ng-hide="$ctrl.isUserRegistered()">Vous n'&ecirc;tes pas inscrit(e) :
             <button ng-click="$ctrl.register()">S'inscrire</button>
         </p>
@@ -29,20 +38,25 @@
             <button ng-click="$ctrl.unregister()">Se d&eacute;sinscrire</button>
         </p>
 
-        <p>Joueurs inscrits : </p>
-        <ol>
-            <li ng-repeat="gamer in $ctrl.game.gamers">{{gamer.shortName}}</li>
-        </ol>
     </div>
 
-    <div style="display: flex"  ng-if="['STARTED', 'STOPPED'].includes($ctrl.game.status)">
+    <div>
+        <label>Historique</label> :    <button ng-click="$ctrl.onHistoryBack()" ng-disabled="$ctrl.historyStep === 0 || $ctrl.game.status != 'STOPPED'">Tour précédent</button>
+                        Tour {{$ctrl.historyStep}}
+                        <button href="#" ng-click="$ctrl.onHistoryNext()" ng-disabled="$ctrl.historyStep === $ctrl.history.length || $ctrl.game.status != 'STOPPED'">Tour suivant</button>
+    </div>
+
+    <div style="display: flex; margin-top: 10px"  ng-if="['STARTED', 'STOPPED'].includes($ctrl.game.status)">
         <div>
             <gamers-ranking gamers="$ctrl.game.gamers"></gamers-ranking>
         </div>
         <div class="vr"></div>
         <div>
             <board model="$ctrl.game.board"></board>
-            <event-log></event-log>
+
+            <div style="margin-top: 10px">
+                <event-log></event-log>
+            </div>
         </div>
     </div>
 </div>

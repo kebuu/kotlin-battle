@@ -21,6 +21,10 @@
     padding: 0;
 }
 
+label {
+    font-weight: bold;
+}
+
 .hole {
     background: url('../image/hole.png') no-repeat;
     background-size: 40px 40px;
@@ -53,6 +57,11 @@
 
 .greedyBot {
     background: url('../image/android-blue.png') no-repeat transparent;
+    background-size: 40px 40px;
+}
+
+.aggressiveBot {
+    background: url('../image/android-red.png') no-repeat transparent;
     background-size: 40px 40px;
 }
 

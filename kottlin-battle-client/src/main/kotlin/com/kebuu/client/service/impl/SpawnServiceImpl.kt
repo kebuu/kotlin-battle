@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service
 class SpawnServiceImpl : SpawnService {
 
     override fun spawnUpdate(point: Int): SpawnAttributes {
-        return SpawnAttributes()
+        return SpawnAttributes(1)
     }
 }

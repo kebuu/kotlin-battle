@@ -45,6 +45,10 @@ abstract class BaseGamer(val userId: String, private var zPoints: Int = 100): Ga
         this.life = life
     }
 
+    override fun setZPoints(zPoints: Int) {
+        this.zPoints = zPoints
+    }
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
