@@ -33,8 +33,10 @@ class ActionExecutorVisitorTest {
         game = Game(gameConfig, Mockito.mock(EventLogService::class.java))
         board = game.board
         gamer1 = DummyBot()
+        gamer1.setLife(1)
         gamer1Spawn = Spawn(gamer1, SpawnAttributes(3, 4, 2, 2))
         gamer2 = DummyBot()
+        gamer2.setLife(1)
         gamer2Spawn = Spawn(gamer2, SpawnAttributes(5, 1, 2, 1))
         executor = ActionExecutorVisitor(game, gamer1)
 
@@ -54,6 +56,15 @@ class ActionExecutorVisitorTest {
         executor.execute(MoveAction(moveToPosition))
 
         assertThat(gamer1Spawn.position).isEqualTo(moveToPosition)
+    }
+
+    @Test
+    fun executeMoveAction_butKilledBefore() {
+        gamer1.setLife(0)
+        val moveToPosition = Position(5, 5)
+        executor.execute(MoveAction(moveToPosition))
+
+        assertThat(gamer1Spawn.position).isEqualTo(Position.ORIGIN)
     }
 
     @Test

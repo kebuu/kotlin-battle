@@ -38,6 +38,5 @@ class SpawnControllerTest {
 
         val spawnAttributes = objectMapper.readValue(result.response.contentAsString, SpawnAttributes::class.java)
         Assertions.assertThat(spawnAttributes).isEqualTo(SpawnAttributes())
-        Assertions.assertThat(spawnAttributes).isNotEqualTo(SpawnAttributes(10))
     }
 }
