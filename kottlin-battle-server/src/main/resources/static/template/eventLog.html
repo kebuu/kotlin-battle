@@ -1,6 +1,6 @@
 <div class="event-log">
     <label>Filtre de log : </label><input ng-model="$ctrl.logFilter"/>
     <ul>
-        <li ng-repeat="log in $ctrl.logs | orderBy:['timestamp']" ng-show="log.message.toLocaleLowerCase().includes($ctrl.logFilter.toLocaleLowerCase())">{{log.message}}</li>
+        <li class="log-{{log.type}}" ng-repeat="log in $ctrl.logs | orderBy:['timestamp']" ng-show="log.message.toLocaleLowerCase().includes($ctrl.logFilter.toLocaleLowerCase())">{{log.message}}</li>
     </ul>
 </div>

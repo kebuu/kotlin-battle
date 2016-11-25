@@ -75,3 +75,11 @@ label {
     width: 180px;
     padding-left: 15px;
 }
+
+.log-warn {
+    color: chocolate;
+}
+
+.log-error {
+    color: red;
+}
