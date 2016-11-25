@@ -64,8 +64,9 @@ angular.module('app').component('gameView', {
                     $scope.$apply(() => {
                         let eventLog = JSON.parse(data.body);
                         eventLogService.addLog({
+                            timestamp: eventLog.timestamp,
                             username: eventLog.username,
-                            message: (this.game.currentStep + 1) + '. ' + eventLog.message
+                            message: (eventLog.gameStep + 1) + '. ' + eventLog.message
                         });
                     })
                 });

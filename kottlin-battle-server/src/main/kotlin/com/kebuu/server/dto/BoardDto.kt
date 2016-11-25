@@ -1,4 +1,4 @@
-package com.kebuu.core.dto
+package com.kebuu.server.dto
 
 import com.kebuu.core.Dimension
 import com.kebuu.core.board.Board

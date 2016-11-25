@@ -32,7 +32,7 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
         val NO_INITIAL_DELAY: Long = 0
     }
 
-    val mappedScheduledTask = mutableMapOf<Game, ScheduledFuture<*>>()
+    var scheduledTask: ScheduledFuture<*>? = null
     val games: MutableList<Game> = mutableListOf()
     val executor = Executors.newScheduledThreadPool(1)!!
 
@@ -78,22 +78,19 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
     private fun runSteps(activeGame: Game) {
         val stepCounter = AtomicInteger(1)
 
-        val scheduledTask = executor.scheduleAtFixedRate({
+        scheduledTask = executor.scheduleAtFixedRate({
             activeGame.runStep(stepCounter.andIncrement)
             webSocketService.sendGame(activeGame)
 
             if (activeGame.isOver()) {
                 logger.info("Game is over")
-                mappedScheduledTask[activeGame]!!.cancel(false)
-                mappedScheduledTask.remove(activeGame)
                 end()
             }
         }, GameManager.NO_INITIAL_DELAY, gameConfig.gameStepDurationSecond, TimeUnit.SECONDS)
-
-        mappedScheduledTask.put(activeGame, scheduledTask)
     }
 
     private fun end() {
+        scheduledTask?.cancel(false)
         val activeGame = activeGame()
         activeGame.end()
         webSocketService.sendGame(activeGame)
@@ -120,7 +117,7 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
 
     fun stop() {
         val activeGame = activeGame()
-        mappedScheduledTask[activeGame]?.cancel(false)
+        scheduledTask?.cancel(false)
         activeGame.end()
         webSocketService.sendGame(activeGame)
     }

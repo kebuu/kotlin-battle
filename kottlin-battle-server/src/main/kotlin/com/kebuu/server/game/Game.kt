@@ -20,7 +20,9 @@ import com.kebuu.core.utils.Loggable
 import com.kebuu.core.utils.waitAndUnwrap
 import com.kebuu.server.action.visitor.ActionExecutorVisitor
 import com.kebuu.server.action.visitor.ActionValidatorVisitor
+import com.kebuu.server.bean.ErrorGameEvent
 import com.kebuu.server.bean.GameEvent
+import com.kebuu.server.bean.WarnGameEvent
 import com.kebuu.server.config.GameConfig
 import com.kebuu.server.enums.GameLevel
 import com.kebuu.server.exception.GameAlreadyStartedException
@@ -96,7 +98,7 @@ open class Game(val config: GameConfig,
             if (board.doesPositionHasItemOfType<Hole>(spawnPosition)) {
                 gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnHole / 100)
                 board.gamerSpawn(gamer).moveTo(board.randomEmptyPosition())
-                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                eventLogService.logEvent(GameEvent(gamer.gamerId(), currentStep,
                         "${gamer.shortName()} ne devait pas marcher bien droit, il vient de tomber dans un trou"))
             }
         }
@@ -107,7 +109,7 @@ open class Game(val config: GameConfig,
                 gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnKill / 100)
                 gamerSpawn.moveTo(board.randomEmptyPosition())
                 gamer.setLife(config.gamerLife)
-                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                eventLogService.logEvent(GameEvent(gamer.gamerId(), currentStep,
                         "RIP ${gamer.shortName()} !"))
             }
         }
@@ -128,13 +130,11 @@ open class Game(val config: GameConfig,
             val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
             if (validationResult.isOk()) {
                 spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
-                eventLogService.logEvent(GameEvent(gamer.gamerId(),
+                eventLogService.logEvent(GameEvent(gamer.gamerId(),  currentStep,
                         "${gamer.shortName()} a maintenant les caractéristiques suivantes : ${spawn.attributes}"))
             } else {
                 spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
-                eventLogService.logEvent(GameEvent(gamer.gamerId(),
-                        "${gamer.shortName()} ne sait pas faire des additions correctement pour configurer son pion -> " +
-                                "mise à jour aléatoire"))
+                eventLogService.logEvent(WarnGameEvent(gamer.gamerId(), currentStep, validationResult.message))
             }
         }
     }
@@ -187,11 +187,15 @@ open class Game(val config: GameConfig,
         return try {
             supplyAsync.get(config.gamerResponseTimeout, config.gamerResponseTimeoutTimeUnit)
         } catch(e: TimeoutException) {
-            e.printStackTrace()
+            eventLogService.logEvent(WarnGameEvent(gamer.gamerId(), currentStep,
+                    "${gamer.shortName()} n'a pas réussi à updater son pion assez vite... mise à jour aléatoire"))
             supplyAsync.cancel(true)
             GamerSpawnAttributes(gamer, currentAttributes.updateRandomly(point))
         } catch(e: Exception) {
             e.printStackTrace()
+            eventLogService.logEvent(ErrorGameEvent(gamer.gamerId(), currentStep,
+                    "${gamer.shortName()} a lever une exception au lieu d'updater son pion... mise à jour aléatoire"))
+
             GamerSpawnAttributes(gamer, currentAttributes.updateRandomly(point))
         }
     }
@@ -202,7 +206,8 @@ open class Game(val config: GameConfig,
 
         forbiddenActions.forEach {
             val gamerName = it.gamer.gamerId()
-            eventLogService.logEvent(GameEvent(gamerName, "$gamerName a oublié que certaines action n'étaient pas autorisées à ce niveau du jeu"))
+            eventLogService.logEvent(WarnGameEvent(gamerName,  currentStep,
+                    "$gamerName a oublié que certaines action n'étaient pas autorisées à ce niveau du jeu"))
         }
 
         for (gamerAction in sortedActions) {
@@ -213,9 +218,9 @@ open class Game(val config: GameConfig,
             val validationResult = action.validateBy(validator)
             if (validationResult.isOk()) {
                 val executionMessage = action.executeBy(executor)
-                eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(), executionMessage))
+                eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(),  currentStep, executionMessage))
             } else {
-                eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(), validationResult.getValidationErrorMessages().toString()))
+                eventLogService.logEvent(WarnGameEvent(gamerAction.gamer.gamerId(),  currentStep, validationResult.getValidationErrorMessages().toString()))
             }
         }
     }

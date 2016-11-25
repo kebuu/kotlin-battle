@@ -1,6 +1,6 @@
 package com.kebuu.server.dto
 
-import com.kebuu.core.dto.BoardDto
+import com.kebuu.server.dto.BoardDto
 import com.kebuu.core.dto.GamerDto
 import com.kebuu.server.game.Game
 
