@@ -1,6 +1,6 @@
 <div ng-if="!$ctrl.game.status">
     <p>Aucun jeu en cours !</p>
-    <div>
+    <div ng-if="$ctrl.isUserAdmin()">
         Cr&eacute;er un nouveau jeu : <br/>
         <game-creator></game-creator>
     </div>
@@ -9,10 +9,12 @@
 
     <h3>Jeu en cours (niveau {{$ctrl.game.level}})</h3>
 
-    <button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status == 'CREATED'">D&eacute;marrer</button>
-    <button ng-click="$ctrl.onStopPressed()" ng-if="$ctrl.game.status == 'STARTED'">Arr&ecirc;ter</button>
-    <div ng-if="$ctrl.game.status == 'STOPPED'">
-        <button ng-click="$ctrl.onResumePressed()">Recommencer</button> ou cr&eacute;er un nouveau jeu : <game-creator></game-creator>
+    <div ng-if="$ctrl.isUserAdmin()">
+        <button ng-click="$ctrl.onStartPressed()" ng-if="$ctrl.game.status == 'CREATED'">D&eacute;marrer</button>
+        <button ng-click="$ctrl.onStopPressed()" ng-if="$ctrl.game.status == 'STARTED'">Arr&ecirc;ter</button>
+        <div ng-if="$ctrl.game.status == 'STOPPED'">
+            <button ng-click="$ctrl.onResumePressed()">Recommencer</button> ou cr&eacute;er un nouveau jeu : <game-creator></game-creator>
+        </div>
     </div>
 
     <p>
