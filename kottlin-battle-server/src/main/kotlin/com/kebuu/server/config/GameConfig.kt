@@ -15,10 +15,10 @@ class GameConfig {
     var limitedActionAllowedOccurrence = mutableMapOf<LimitedUseAction.LimitedUseActionType, Int>()
     var gameStepDurationSecond: Long = 1
     var updateSpawnInterval: Int = 5
-    var zPointPercentTakenOnKill: Int = 15
-    var zPointPercentLostOnKill: Int = 5
-    var zPointPercentLostOnHole: Int = 10
-    var gamerLife: Int = 2
+    var zPointPercentTakenOnKill: Int = 30
+    var zPointPercentLostOnKill: Int = 15
+    var zPointPercentLostOnHole: Int = 20
+    var gamerLife: Int = 10
     var initialZPoints: Int = 100
     var adminMail = ""
 }

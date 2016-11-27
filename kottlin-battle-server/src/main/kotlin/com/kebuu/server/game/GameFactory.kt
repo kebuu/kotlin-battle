@@ -30,7 +30,7 @@ class GameFactory @Autowired constructor(val random: Random) {
     }
 
     private fun calculateXYDimension(numberOfGamers: Int) : Int {
-        val side = Math.max(10, numberOfGamers / 2 )
-        return side - (random.nextInt(5) - 2)
+        val side = Math.max(10, Math.ceil(numberOfGamers.toDouble() / 1.2 ).toInt())
+        return side - (random.nextInt(7) - 3)
     }
 }

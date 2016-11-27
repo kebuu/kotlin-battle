@@ -28,18 +28,20 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
 
         val effectiveAttackForce = Math.max(gamerSpawn.attributes.force - defenderSpawn.attributes.resistance, 1)
         defender.loseLife(effectiveAttackForce)
-        val zPointTakenOnKill = defender.getZPoints() * game.config.zPointPercentTakenOnKill / 100
+
+        var executionMessage = "${gamer.shortName()} inflige $effectiveAttackForce point(s) de dégat à ${defender.shortName()}"
 
         if (defender.isDead()) {
+            val zPointTakenOnKill = defender.getZPoints() * game.config.zPointPercentTakenOnKill / 100
             gamer.gainZPoints(zPointTakenOnKill)
+            executionMessage += " et il gagne $zPointTakenOnKill points pour l'avoir occis"
         }
 
-        return "${gamer.shortName()} inflige $effectiveAttackForce point(s) de dégat à ${defender.shortName()}"
+        return executionMessage
     }
 
     override fun execute(healAction: HealAction): String {
-        val gamerSpawn = game.getSpawn(gamer.gamerId())
-        gamer.setLife(gamerSpawn.attributes.resistance)
+        gamer.setLife(game.config.gamerLife)
         game.gamerUsedLimitedAction(gamer, healAction)
         return "${gamer.shortName()} récupère toute sa vie"
     }
@@ -50,12 +52,8 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
     }
 
     override fun execute(moveAction: MoveAction): String {
-        return if (gamer.isDead()) {
-            "${gamer.shortName()} s'apprêtait à bouger quand il s'est fait tuer..."
-        } else {
-            board.gamerSpawn(gamer).moveTo(moveAction.goTo)
-            "${gamer.shortName()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
-        }
+        board.gamerSpawn(gamer).moveTo(moveAction.goTo)
+        return "${gamer.shortName()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
     }
 
     override fun execute(exceptionAction: ExceptionAction) = 

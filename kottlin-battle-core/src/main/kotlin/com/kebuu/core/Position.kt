@@ -27,4 +27,8 @@ data class Position(val x: Int = 0, val y: Int = 0) : Comparable<Position> {
 
         return comparison
     }
+
+    override fun toString(): String {
+        return "[$x-$y]"
+    }
 }

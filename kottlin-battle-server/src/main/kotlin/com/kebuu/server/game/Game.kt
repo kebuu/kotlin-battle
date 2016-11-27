@@ -96,21 +96,23 @@ open class Game(val config: GameConfig,
         for (gamer in gamers) {
             val spawnPosition = board.gamerSpawn(gamer).position
             if (board.doesPositionHasItemOfType<Hole>(spawnPosition)) {
-                gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnHole / 100)
+                val zPointsLost = gamer.getZPoints() * config.zPointPercentLostOnHole / 100
+                gamer.loseZPoints(zPointsLost)
                 board.gamerSpawn(gamer).moveTo(board.randomEmptyPosition())
                 eventLogService.logEvent(GameEvent(gamer.gamerId(), currentStep,
-                        "${gamer.shortName()} ne devait pas marcher bien droit, il vient de tomber dans un trou"))
+                        "${gamer.shortName()} ne devait pas marcher bien droit, il vient de tomber dans un trou. Il perd $zPointsLost points"))
             }
         }
 
         for (gamer in gamers) {
             if (gamer.isDead()) {
                 val gamerSpawn = board.gamerSpawn(gamer)
-                gamer.loseZPoints(gamer.getZPoints() * config.zPointPercentLostOnKill / 100)
+                val zPointsLost = gamer.getZPoints() * config.zPointPercentLostOnKill / 100
+                gamer.loseZPoints(zPointsLost)
                 gamerSpawn.moveTo(board.randomEmptyPosition())
                 gamer.setLife(config.gamerLife)
                 eventLogService.logEvent(GameEvent(gamer.gamerId(), currentStep,
-                        "RIP ${gamer.shortName()} !"))
+                        "RIP ${gamer.shortName()} ! Il perd $zPointsLost points"))
             }
         }
 
@@ -211,16 +213,19 @@ open class Game(val config: GameConfig,
         }
 
         for (gamerAction in sortedActions) {
-            val validator = ActionValidatorVisitor(this, gamerAction.gamer)
-            val executor = ActionExecutorVisitor(this, gamerAction.gamer)
-            val action = gamerAction.action
+            if (!gamerAction.gamer.isDead()) {
+                val validator = ActionValidatorVisitor(this, gamerAction.gamer)
+                val executor = ActionExecutorVisitor(this, gamerAction.gamer)
+                val action = gamerAction.action
+                val gamerInitialPosition = getSpawn(gamerAction.gamer.gamerId()).position
 
-            val validationResult = action.validateBy(validator)
-            if (validationResult.isOk()) {
-                val executionMessage = action.executeBy(executor)
-                eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(),  currentStep, executionMessage))
-            } else {
-                eventLogService.logEvent(WarnGameEvent(gamerAction.gamer.gamerId(),  currentStep, validationResult.getValidationErrorMessages().toString()))
+                val validationResult = action.validateBy(validator)
+                if (validationResult.isOk()) {
+                    val executionMessage = action.executeBy(executor)
+                    eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(),  currentStep, "($gamerInitialPosition) - $executionMessage"))
+                } else {
+                    eventLogService.logEvent(WarnGameEvent(gamerAction.gamer.gamerId(),  currentStep, "($gamerInitialPosition) - ${validationResult.getValidationErrorMessages()}"))
+                }
             }
         }
     }
