@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 class SpawnServiceImpl : SpawnService, Loggable {
 
     override fun spawnUpdate(point: Int): SpawnAttributes {
-        logger.info("Mise a jour des attributs du pion avec $point point(s)")
         return SpawnAttributes(0)
     }
 }

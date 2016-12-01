@@ -17,6 +17,8 @@ class ActionController @Autowired constructor(val actionService: ActionService) 
 
     @PutMapping
     fun action(@RequestBody gameInfo: GameInfo, bindingResult: BindingResult): StepAction {
+        logger.info("Recuperation action")
+
         if (bindingResult.hasErrors()) {
             logger.error(bindingResult.allErrors.toString())
         }
