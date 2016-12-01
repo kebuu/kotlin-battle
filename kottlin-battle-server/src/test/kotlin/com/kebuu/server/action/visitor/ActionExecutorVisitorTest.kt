@@ -30,6 +30,7 @@ class ActionExecutorVisitorTest {
     @Before
     fun setUp() {
         gameConfig = GameConfig()
+        gameConfig.gamerLife = 10
         game = Game(gameConfig, Mockito.mock(EventLogService::class.java))
         board = game.board
         gamer1 = DummyBot()
@@ -59,15 +60,6 @@ class ActionExecutorVisitorTest {
     }
 
     @Test
-    fun executeMoveAction_butKilledBefore() {
-        gamer1.setLife(0)
-        val moveToPosition = Position(5, 5)
-        executor.execute(MoveAction(moveToPosition))
-
-        assertThat(gamer1Spawn.position).isEqualTo(Position.ORIGIN)
-    }
-
-    @Test
     fun executeDigAction() {
         val initialZPoints = gamer1.getZPoints()
 
@@ -89,13 +81,13 @@ class ActionExecutorVisitorTest {
 
         executor.execute(FightAction(gamer2.gamerId()))
         assertThat(gamer2.getLife()).isEqualTo(0)
-        assertThat(gamer1.getZPoints()).isEqualTo(115)
+        assertThat(gamer1.getZPoints()).isEqualTo(130)
 
         gamer2.setLife(4)
         gamer2Spawn.attributes.resistance = 10
         executor.execute(FightAction(gamer2.gamerId()))
         assertThat(gamer2.getLife()).isEqualTo(3)
-        assertThat(gamer1.getZPoints()).isEqualTo(115)
+        assertThat(gamer1.getZPoints()).isEqualTo(130)
     }
 
     @Test
@@ -119,7 +111,7 @@ class ActionExecutorVisitorTest {
         executor.execute(HealAction)
 
         assertThat(game.getLimitedActionUsedBy(gamer1, HealAction.getType())).isEqualTo(usedAction + 1)
-        assertThat(gamer1.getLife()).isEqualTo(gamer1Spawn.attributes.resistance)
+        assertThat(gamer1.getLife()).isEqualTo(gameConfig.gamerLife)
     }
 
     @Test

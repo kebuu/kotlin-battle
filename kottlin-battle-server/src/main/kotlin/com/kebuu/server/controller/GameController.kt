@@ -1,5 +1,6 @@
 package com.kebuu.server.controller
 
+import com.kebuu.server.config.GameConfig
 import com.kebuu.server.dto.GameDto
 import com.kebuu.server.enums.GameLevel
 import com.kebuu.server.exception.UnknownUserException
@@ -17,7 +18,12 @@ import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/games")
-class GameController @Autowired constructor(val gameManager: GameManager) {
+class GameController @Autowired constructor(val gameManager: GameManager, val gameConfig: GameConfig) {
+
+    @GetMapping("/config")
+    fun config(): GameConfig {
+        return gameConfig
+    }
 
     @GetMapping("/active")
     fun getActiveGame(): ResponseEntity<GameDto> {
@@ -44,7 +50,7 @@ class GameController @Autowired constructor(val gameManager: GameManager) {
     }
 
     @GetMapping("/resume")
-    fun resumeLasteGame() {
+    fun resumeLastGame() {
         gameManager.resumeLast()
     }
 

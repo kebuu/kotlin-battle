@@ -13,5 +13,9 @@ class UserRegistryService {
     fun putUser(user: User) {
         users[user.email] = user
     }
+
+    fun remove(name: String) {
+        users.remove(name)
+    }
 }
 

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kottlin-battle-core</artifactId>
+    <artifactId>kotlin-sample</artifactId>
 
     <properties>
         <kotlin.version>1.0.5-2</kotlin.version>
@@ -31,7 +31,6 @@
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -56,5 +55,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

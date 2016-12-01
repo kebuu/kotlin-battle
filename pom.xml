@@ -13,6 +13,7 @@
         <module>kottlin-battle-server</module>
         <module>kottlin-battle-client</module>
         <module>kottlin-battle-test</module>
+        <module>kotlin-sample</module>
     </modules>
 
     <parent>

@@ -41,7 +41,7 @@ class GameTest {
 
         Assertions.assertThat(gamer1Spawn.position).isNotEqualTo(Position.ORIGIN)
         Assertions.assertThat(gamer1.getLife()).isEqualTo(10)
-        Assertions.assertThat(gamer1.getZPoints()).isEqualTo(90)
+        Assertions.assertThat(gamer1.getZPoints()).isEqualTo(80)
     }
 
 
@@ -53,6 +53,6 @@ class GameTest {
 
         Assertions.assertThat(gamer1Spawn.position).isNotEqualTo(Position.ORIGIN)
         Assertions.assertThat(gamer1.getLife()).isEqualTo(gameConfig.gamerLife)
-        Assertions.assertThat(gamer1.getZPoints()).isEqualTo(95)
+        Assertions.assertThat(gamer1.getZPoints()).isEqualTo(85)
     }
 }
