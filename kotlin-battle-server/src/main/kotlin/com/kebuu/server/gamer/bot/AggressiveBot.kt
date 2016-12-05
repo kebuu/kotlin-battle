@@ -39,8 +39,14 @@ class AggressiveBot private constructor(gamerId: String, override val type: Stri
             if (enemy.position.distanceFrom(gameInfo.position) <= spawnAttributes.shootDistance) {
                 action = FightAction(enemy.gamerId)
             } else {
-                val closestAccessiblePosition = dimension.filter { gameInfo.position.distanceFrom(it) <= spawnAttributes.speed }
-                        .filter { itemsAt[it]?.none { it is MountainBoardItemDto } ?: true }
+                val closestAccessiblePosition = dimension.
+                        filter {
+                            gameInfo.position.distanceFrom(it) <= spawnAttributes.speed
+                        }
+                        .filter {
+                            val items = itemsAt[it] ?: listOf()
+                            items.none { it is MountainBoardItemDto }
+                        }
                         .minBy { it.distanceFrom(enemy.position) }!!
                 action = MoveAction(closestAccessiblePosition)
             }

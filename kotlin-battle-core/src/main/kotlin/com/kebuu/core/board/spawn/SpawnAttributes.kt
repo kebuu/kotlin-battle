@@ -13,8 +13,6 @@ data class SpawnAttributes(var speed: Int = 0,
         get() = speed + force + resistance + shootDistance
 
     fun updateRandomly(point: Int): SpawnAttributes {
-        val newAttributes = this.copy()
-
         val operations = listOf(
             { attributes: SpawnAttributes -> attributes.speed += 1},
             { attributes: SpawnAttributes -> attributes.force += 1},
@@ -22,12 +20,12 @@ data class SpawnAttributes(var speed: Int = 0,
             { attributes: SpawnAttributes -> attributes.shootDistance += 1}
         )
 
-        for(i in 0..point) {
+        for(i in 1..point) {
             Collections.shuffle(operations)
             operations.first()(this)
         }
 
-        return newAttributes
+        return this
     }
 
     fun isValid(): Boolean {

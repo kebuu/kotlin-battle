@@ -16,6 +16,7 @@ angular.module('app').component('gameView', {
         this.onStartPressed = function() {
             $http.get(`/games/start`);
             this.history.length = 0;
+            eventLogService.clear();
         };
 
         this.onStopPressed = function() {

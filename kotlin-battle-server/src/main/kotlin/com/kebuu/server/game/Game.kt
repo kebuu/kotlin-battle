@@ -27,7 +27,6 @@ import com.kebuu.server.config.GameConfig
 import com.kebuu.server.enums.GameLevel
 import com.kebuu.server.exception.GameAlreadyStartedException
 import com.kebuu.server.service.EventLogService
-import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeoutException
 
@@ -39,7 +38,6 @@ open class Game(val config: GameConfig,
     val gamers: MutableSet<Gamer> = mutableSetOf()
     var status: GameStatus = GameStatus.CREATED
     val board: Board = Board()
-    val random: Random = Random(1)
     val limitedActionUsedByGamers = mutableMapOf<Gamer, MutableMap<LimitedUseActionType, Int>>()
 
     fun addGamers(vararg gamers: Gamer) {
@@ -61,14 +59,13 @@ open class Game(val config: GameConfig,
     fun init() {
         status = GameStatus.STARTED
 
-        val gamersSpawnAttributes = getInitialSpawnAttributes()
-        gamersSpawnAttributes.map { Spawn(it.gamer, it.spawnAttributes, board.randomEmptyPosition()) }
-            .forEach {
-                it.owner.setLife(config.gamerLife)
-                board.addItem(it)
-            }
-
-        gamers.forEach { it.setZPoints(config.initialZPoints) }
+        gamers.forEach {
+            val spawnAttributes = if(level.enableSpawnUpdate) SpawnAttributes() else SpawnAttributes(3, 0, 0, 0)
+            val spawn = Spawn(it, spawnAttributes, board.randomEmptyPosition())
+            board.addItem(spawn)
+            it.setLife(config.gamerLife)
+            it.setZPoints(config.initialZPoints)
+        }
     }
 
     fun end() {
@@ -80,7 +77,7 @@ open class Game(val config: GameConfig,
         currentStep = step
 
         if (level.enableSpawnUpdate && (currentStep - 1) % config.updateSpawnInterval == 0) {
-            updateSpawns()
+            updateSpawns(level.updateSpawnPoints)
         }
 
         logger.info("Getting next actions")
@@ -119,9 +116,9 @@ open class Game(val config: GameConfig,
         board.cleanFoundTreasures()
     }
 
-    private fun updateSpawns() {
-        logger.info("Getting spawn update")
-        val spawnAttributesUpdatePoints = random.nextInt(5) + 3
+    private fun updateSpawns(updateSpawnPoints: Int) {
+        logger.info("Getting spawn update with point : $updateSpawnPoints")
+        val spawnAttributesUpdatePoints = updateSpawnPoints
         val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
 
         for (gamerSpawnAttributes in gamersSpawnAttributes) {
@@ -132,12 +129,14 @@ open class Game(val config: GameConfig,
             val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
             if (validationResult.isOk()) {
                 spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
-                eventLogService.logEvent(GameEvent(gamer.gamerId(),  currentStep,
-                        "${gamer.shortName()} a maintenant les caractéristiques suivantes : ${spawn.attributes}"))
             } else {
-                spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
+                val spawnAttributesUpdated = spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
+                spawn.updateAttributesTo(spawnAttributesUpdated)
                 eventLogService.logEvent(WarnGameEvent(gamer.gamerId(), currentStep, validationResult.message))
             }
+
+            eventLogService.logEvent(GameEvent(gamer.gamerId(),  currentStep,
+                    "${gamer.shortName()} a maintenant les caractéristiques suivantes : ${spawn.attributes}"))
         }
     }
 
@@ -161,20 +160,12 @@ open class Game(val config: GameConfig,
         }
     }
 
-    private fun getInitialSpawnAttributes(): List<GamerSpawnAttributes> {
-        return if (level.enableSpawnUpdate) {
-            getGamersSpawnUpdate(random.nextInt(4) + 3)
-        } else {
-            gamers.map { GamerSpawnAttributes(it, SpawnAttributes(2)) }
-        }
-    }
-
     private fun getGamersSpawnUpdate(updatePoints: Int): List<GamerSpawnAttributes> {
         val futureGamerSpawnAttributes = mutableListOf<CompletableFuture<GamerSpawnAttributes>>()
 
         gamers.map { gamer ->
             futureGamerSpawnAttributes.add(CompletableFuture.supplyAsync {
-                getGamersSpawnUpdate(gamer, updatePoints, SpawnAttributes())
+                getGamersSpawnUpdate(gamer, updatePoints, getSpawn(gamer.gamerId()).attributes)
             })
         }
 

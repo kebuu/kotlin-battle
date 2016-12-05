@@ -15,14 +15,14 @@ class Spawn(val owner: Gamer,
 
     fun validateUpdate(newSpawnAttributes: SpawnAttributes, spawnAttributesUpdatePoints: Int): SpawnUpdateValidationResult {
         return if (!newSpawnAttributes.isValid()) {
-            SpawnUpdateValidationResult.withError("${owner.shortName()}, la valeur des attributs d'un pion ne peut pas être négatif")
+            SpawnUpdateValidationResult.withError("${owner.shortName()}, la valeur des attributs d'un pion ne peut pas être négatif... mise à jour aléatoire")
         } else if (newSpawnAttributes.sumPoints - attributes.sumPoints > spawnAttributesUpdatePoints) {
-            SpawnUpdateValidationResult.withError("${owner.shortName()} a essayé de booster son pion un peu plus que prévu")
+            SpawnUpdateValidationResult.withError("${owner.shortName()} a essayé de booster son pion un peu plus que prévu... mise à jour aléatoire")
         }else if (newSpawnAttributes.force < attributes.force ||
                 newSpawnAttributes.speed < attributes.speed ||
                 newSpawnAttributes.resistance < attributes.resistance ||
                 newSpawnAttributes.shootDistance < attributes.shootDistance) {
-            SpawnUpdateValidationResult.withError("Non, non, non${owner.shortName()} on ne peut pas mettre son pion à jour n'importe comment")
+            SpawnUpdateValidationResult.withError("Non, non, non ${owner.shortName()} on ne peut pas modifier son pion n'importe comment... mise à jour aléatoire")
         } else {
             SpawnUpdateValidationResult.ok()
         }

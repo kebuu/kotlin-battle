@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>kottlin-battle-core</module>
-        <module>kottlin-battle-server</module>
-        <module>kottlin-battle-client</module>
-        <module>kottlin-battle-test</module>
+        <module>kotlin-battle-core</module>
+        <module>kotlin-battle-server</module>
+        <module>kotlin-battle-client</module>
+        <module>kotlin-battle-test</module>
         <module>kotlin-sample</module>
     </modules>
 
