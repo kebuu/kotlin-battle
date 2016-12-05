@@ -47,6 +47,12 @@
         <label>Historique</label> :    <button ng-click="$ctrl.onHistoryBack()" ng-disabled="$ctrl.historyStep === 0 || $ctrl.game.status != 'STOPPED'">Tour précédent</button>
                         Tour {{$ctrl.historyStep}}
                         <button href="#" ng-click="$ctrl.onHistoryNext()" ng-disabled="$ctrl.historyStep === $ctrl.history.length || $ctrl.game.status != 'STOPPED'">Tour suivant</button>
+                        Montrer les logs du step <input type="checkbox" ng-model="$ctrl.showHistoryLog" />
+        <div ng-show="$ctrl.showHistoryLog">
+            <ul>
+                <li ng-repeat="log in $ctrl.historyLogs($ctrl.historyStep)">{{log.message}}</li>
+            </ul>
+        </div>
     </div>
 
     <div style="display: flex; margin-top: 10px"  ng-if="['STARTED', 'STOPPED'].includes($ctrl.game.status)">

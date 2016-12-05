@@ -4,6 +4,7 @@ angular.module('app').component('gameView', {
         this.game = {};
         this.history = [];
         this.historyStep = 0;
+        this.showHistoryLog = false;
 
         this.$onInit = function() {
             $http.get(`/games/active`).then((response) => {
@@ -11,6 +12,12 @@ angular.module('app').component('gameView', {
             });
 
             this.connect();
+        };
+
+        this.historyLogs = function(step) {
+            return eventLogService.getLogs().filter(log => {
+                return log.message.startsWith(step + ".");
+            });
         };
 
         this.onStartPressed = function() {
