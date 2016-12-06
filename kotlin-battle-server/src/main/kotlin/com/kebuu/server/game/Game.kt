@@ -35,9 +35,9 @@ open class Game(val config: GameConfig,
                 val level: GameLevel = GameLevel.LEVEL_0) : Loggable {
 
     var currentStep = 0
-    val gamers: MutableSet<Gamer> = mutableSetOf()
-    var status: GameStatus = GameStatus.CREATED
-    val board: Board = Board()
+    val gamers = mutableSetOf<Gamer>()
+    var status = GameStatus.CREATED
+    val board = Board()
     val limitedActionUsedByGamers = mutableMapOf<Gamer, MutableMap<LimitedUseActionType, Int>>()
 
     fun addGamers(vararg gamers: Gamer) {
@@ -117,7 +117,7 @@ open class Game(val config: GameConfig,
     }
 
     private fun updateSpawns(updateSpawnPoints: Int) {
-        logger.info("Getting spawn update with point : $updateSpawnPoints")
+        logger.info("Getting spawn update with $updateSpawnPoints points")
         val spawnAttributesUpdatePoints = updateSpawnPoints
         val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
 

@@ -8,7 +8,7 @@ sealed class Expr {
 
 
 
-fun test(expr: Expr) {
+fun test(expr: Expr): String {
     val visitor = Visitor()
 
     val visitedResult = when(expr) {
@@ -16,6 +16,8 @@ fun test(expr: Expr) {
         is Expr.Sum -> visitor.visit(expr)
         is Expr.NotANumber -> visitor.visit(expr)
     }
+
+    return visitedResult
 }
 
 class Visitor {

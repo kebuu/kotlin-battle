@@ -14,7 +14,7 @@ fun Spawn.canMoveTo(position: Position): Boolean {
     return this.position.distanceFrom(position) <= this.attributes.speed
 }
 
-operator fun Position.plus(position: Position): Position {"".isNullOrBlank()
+operator fun Position.plus(position: Position): Position {
     return this.plusX(position.x).plusY(position.y)
 }
 

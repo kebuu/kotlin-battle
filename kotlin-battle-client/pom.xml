@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.kebuu</groupId>
             <artifactId>kotlin-battle-core</artifactId>
             <version>${project.version}</version>
