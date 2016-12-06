@@ -33,12 +33,12 @@ enum class GameLevel(val enableSpawnUpdate: Boolean,
     LEVEL_1(true,
             listOf(FightAction::class.java, LimitedUseAction::class.java),
             mapOf(treasureGenerator to 20, holeGenerator to 10, mountainGenerator to 10),
-            mapOf(BotGenerator.greedyGenerator to 5),
+            mapOf(BotGenerator.greedyGenerator to 4),
             2),
     LEVEL_2(true,
             listOf(),
-            mapOf(treasureGenerator to 30, holeGenerator to 15, mountainGenerator to 15),
-            mapOf(BotGenerator.dummyGenerator to 3, BotGenerator.aggressiveGenerator to 7, BotGenerator.greedyGenerator to 7),
+            mapOf(treasureGenerator to 35, holeGenerator to 15, mountainGenerator to 15),
+            mapOf(BotGenerator.dummyGenerator to 2, BotGenerator.aggressiveGenerator to 4, BotGenerator.greedyGenerator to 3),
             8);
 
     val random = Random(Date().time)
