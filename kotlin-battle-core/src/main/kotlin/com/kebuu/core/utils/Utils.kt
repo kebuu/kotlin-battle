@@ -21,3 +21,7 @@ operator fun Position.plus(position: Position): Position {
 fun equalsOnType(one: Any, another: Any?): Boolean {
     return another != null && another.javaClass == one.javaClass
 }
+
+fun <T, K> T?.mapTo(transformer: (t: T) -> K) = if(this == null) null else transformer(this)
+
+fun <T> T?.keepIf(predicate: (t: T) -> Boolean) = if(this == null) null else predicate(this)
