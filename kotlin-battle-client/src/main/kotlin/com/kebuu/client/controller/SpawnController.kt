@@ -16,6 +16,8 @@ class SpawnController @Autowired constructor(val spawnService: SpawnService) : L
     @GetMapping("/update")
     fun spawnUpdate(@RequestParam point: Int): SpawnAttributes {
         logger.info("spawnUpdate : $point")
-        return spawnService.spawnUpdate(point)
+        val spawnUpdate = spawnService.spawnUpdate(point)
+        logger.info("spawnUpdate to $spawnUpdate")
+        return spawnUpdate
     }
 }

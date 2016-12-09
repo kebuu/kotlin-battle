@@ -23,6 +23,8 @@ class ActionController @Autowired constructor(val actionService: ActionService) 
             logger.error(bindingResult.allErrors.toString())
         }
 
-        return actionService.action(gameInfo)
+        val action = actionService.action(gameInfo)
+        logger.info(action.toString())
+        return action
     }
 }
