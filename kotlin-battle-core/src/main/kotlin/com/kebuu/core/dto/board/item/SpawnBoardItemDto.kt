@@ -26,15 +26,12 @@ class SpawnBoardItemDto: AbstractBoardItemDto {
         iconUrl = extractIconUrl(spawn.owner)
     }
 
-    private fun extractIconUrl(gamer: Gamer): String? {
-        return if (gamer is RemoteGamer) gamer.avatarUrl else null
-    }
+    private fun extractIconUrl(gamer: Gamer): String? =
+        if (gamer is RemoteGamer) gamer.avatarUrl else null
 
-    private fun extractGamerType(gamer: Gamer): String {
-        return when(gamer) {
-            is Bot -> gamer.type
-            is RemoteGamer -> "remote"
-            else -> throw IllegalArgumentException(gamer.javaClass.toString())
-        }
+    private fun extractGamerType(gamer: Gamer): String = when(gamer) {
+        is Bot -> gamer.type
+        is RemoteGamer -> "remote"
+        else -> throw IllegalArgumentException(gamer.javaClass.toString())
     }
 }

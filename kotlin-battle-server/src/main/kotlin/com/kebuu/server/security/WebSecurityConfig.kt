@@ -1,6 +1,6 @@
 package com.kebuu.server.security
 
-import com.kebuu.core.constant.KotlinBattleConstant
+import com.kebuu.core.constant.ROLE_ADMIN
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,7 +15,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         val springSocialConfigurer = SpringSocialConfigurer()
 
         http.authorizeRequests().antMatchers("/", "/signin/**", "/games/profile", "/games/config").permitAll()
-                .antMatchers("/games/new", "/games/start", "/games/stop", "/games/resume").hasRole(KotlinBattleConstant.ROLE_ADMIN)
+                .antMatchers("/games/new", "/games/start", "/games/stop", "/games/resume").hasRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .logout().logoutSuccessUrl("/").permitAll().and()

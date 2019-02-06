@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class GameFactory @Autowired constructor(val random: Random) {
+class GameFactory @Autowired constructor(private val random: Random) {
 
     fun configureBoardFor(game: Game) {
         val dimension = Dimension(calculateXYDimension(game.gamers.size), calculateXYDimension(game.gamers.size))
         game.board.setDimension(dimension)
 
-        for((boardItemGenerator, proportion) in game.level.boardItemGenerators) {
+        game.level.boardItemGenerators.forEach { (boardItemGenerator, proportion) ->
             val numberOfItem = dimension.numberOfCells * proportion / 100
 
             for (i in 1..numberOfItem) {
@@ -20,7 +20,7 @@ class GameFactory @Autowired constructor(val random: Random) {
             }
         }
 
-        for((botGenerator, proportion) in game.level.botGenerators) {
+        game.level.botGenerators.forEach { (botGenerator, proportion) ->
             val numberOfItem = dimension.numberOfCells * proportion / 100
 
             for (i in 1..numberOfItem) {

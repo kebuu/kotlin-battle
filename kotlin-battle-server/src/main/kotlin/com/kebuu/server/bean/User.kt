@@ -27,7 +27,5 @@ class User(val email: String, var avatarUrl: String?, val role: String) : Social
         return true
     }
 
-    override fun hashCode(): Int {
-        return email.hashCode()
-    }
+    override fun hashCode(): Int = email.hashCode()
 }

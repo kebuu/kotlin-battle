@@ -23,7 +23,7 @@ class SpawnControllerTest {
     @Autowired lateinit var webApplicationContext: WebApplicationContext
     @Autowired lateinit var objectMapper: ObjectMapper
 
-    lateinit var mvc: MockMvc
+    private lateinit var mvc: MockMvc
 
     @Before
     fun setUp() {

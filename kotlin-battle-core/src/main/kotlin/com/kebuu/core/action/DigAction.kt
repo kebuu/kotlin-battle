@@ -10,7 +10,7 @@ class DigAction: StepAction {
 
     override fun executeBy(executor: ActionExecutor) = executor.execute(this)
 
-    override fun equals(other: Any?): Boolean {
-        return equalsOnType(this, other)
-    }
+    override fun equals(other: Any?): Boolean = equalsOnType(this, other)
+
+    override fun hashCode(): Int = javaClass.hashCode()
 }

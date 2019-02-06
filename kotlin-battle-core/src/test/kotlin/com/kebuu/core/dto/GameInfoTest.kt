@@ -11,7 +11,7 @@ import com.kebuu.core.board.spawn.Spawn
 import com.kebuu.core.dto.board.item.SpawnBoardItemDto
 import com.kebuu.core.dto.board.item.TreasureBoardItemDto
 import com.kebuu.core.gamer.RemoteGamer
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.springframework.web.client.RestTemplate
@@ -42,9 +42,9 @@ class GameInfoTest {
 
         val gameInfo2 = mapper.readValue(mapper.writeValueAsString(gameInfo), GameInfo::class.java)
 
-        Assertions.assertThat(gameInfo2.board.dimension).isNotNull()
-        Assertions.assertThat(gameInfo2.lastStepNumber).isEqualTo(endStepNumber)
-        Assertions.assertThat(gameInfo2.board.boardItems).hasSize(4)
+        assertThat(gameInfo2.board.dimension).isNotNull()
+        assertThat(gameInfo2.lastStepNumber).isEqualTo(endStepNumber)
+        assertThat(gameInfo2.board.boardItems).hasSize(4)
     }
 
     @Test
@@ -55,9 +55,9 @@ class GameInfoTest {
 
         val gameInfo2 = mapper.readValue(mapper.writeValueAsString(gameInfo), GameInfo::class.java)
 
-        Assertions.assertThat(gameInfo2.board.dimension).isNull()
-        Assertions.assertThat(gameInfo2.lastStepNumber).isNull()
-        Assertions.assertThat(gameInfo2.board.boardItems).hasSize(2)
-        Assertions.assertThat(gameInfo2.board.boardItems.all { it is TreasureBoardItemDto || it is SpawnBoardItemDto  }).isTrue()
+        assertThat(gameInfo2.board.dimension).isNull()
+        assertThat(gameInfo2.lastStepNumber).isNull()
+        assertThat(gameInfo2.board.boardItems).hasSize(2)
+        assertThat(gameInfo2.board.boardItems.all { it is TreasureBoardItemDto || it is SpawnBoardItemDto }).isTrue()
     }
 }

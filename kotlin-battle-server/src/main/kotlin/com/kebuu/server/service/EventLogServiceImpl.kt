@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-open class EventLogServiceImpl @Autowired constructor(private val webSocketService: WebSocketService) : Loggable, EventLogService {
+open class EventLogServiceImpl @Autowired constructor(
+        private val webSocketService: WebSocketService
+) : Loggable, EventLogService {
 
     override fun logEvent(gameEvent: GameEvent) {
         webSocketService.sendEvent(gameEvent)

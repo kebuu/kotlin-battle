@@ -15,33 +15,33 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 
-@Component
-class GameManager @Autowired constructor(val webSocketService: WebSocketService,
-                                         val userRegistryService: UserRegistryService,
-                                         val eventLogService: EventLogService,
-                                         val gameFactory: GameFactory,
-                                         val restTemplate: RestTemplate,
-                                         val gameConfig: GameConfig) : Loggable {
+private const val NO_INITIAL_DELAY: Long = 0
 
-    companion object {
-        val NO_INITIAL_DELAY: Long = 0
-    }
+@Component
+class GameManager @Autowired constructor(
+        val webSocketService: WebSocketService,
+        val userRegistryService: UserRegistryService,
+        val eventLogService: EventLogService,
+        val gameFactory: GameFactory,
+        val restTemplate: RestTemplate,
+        val gameConfig: GameConfig
+) : Loggable {
 
     var scheduledTask: ScheduledFuture<*>? = null
     val games: MutableList<Game> = mutableListOf()
     val executor = Executors.newScheduledThreadPool(1)!!
 
-    fun createGame(gameLevel: GameLevel = GameLevel.LEVEL_0): Game {
-        val game = Game(gameConfig, eventLogService, gameLevel)
-        games.add(game)
-        webSocketService.sendGame(activeGame())
-        return game
-    }
+    fun createGame(gameLevel: GameLevel = GameLevel.LEVEL_0): Game =
+        Game(gameConfig, eventLogService, gameLevel).also {
+            games.add(it)
+            webSocketService.sendGame(activeGame())
+        }
 
     fun start() {
         logger.info("Starting game")
@@ -66,7 +66,7 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
 
         if (lastStoppedGame != null) {
             val game = Game(gameConfig, eventLogService, lastStoppedGame.level)
-            val remoteGamers = lastStoppedGame.gamers.filter{ it is RemoteGamer }
+            val remoteGamers = lastStoppedGame.gamers.filter { it is RemoteGamer }
             game.addGamers(*remoteGamers.toTypedArray())
             games.add(game)
             webSocketService.sendGame(activeGame())
@@ -78,7 +78,7 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
     private fun runSteps(activeGame: Game) {
         val stepCounter = AtomicInteger(1)
 
-        scheduledTask = executor.scheduleAtFixedRate({
+        scheduledTask = executor.scheduleAtFixedRate(NO_INITIAL_DELAY, gameConfig.gameStepDurationSecond, TimeUnit.SECONDS) {
             activeGame.runStep(stepCounter.andIncrement)
             webSocketService.sendGame(activeGame)
 
@@ -86,7 +86,7 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
                 logger.info("Game is over")
                 end()
             }
-        }, GameManager.NO_INITIAL_DELAY, gameConfig.gameStepDurationSecond, TimeUnit.SECONDS)
+        }
     }
 
     private fun end() {
@@ -122,3 +122,11 @@ class GameManager @Autowired constructor(val webSocketService: WebSocketService,
         webSocketService.sendGame(activeGame)
     }
 }
+
+// TODO Fichier extensions
+private fun ScheduledExecutorService.scheduleAtFixedRate(
+        initialDelay: Long,
+        period: Long,
+        unit: TimeUnit,
+        command: () -> Unit
+): ScheduledFuture<*> = scheduleAtFixedRate(command, initialDelay, period, unit)

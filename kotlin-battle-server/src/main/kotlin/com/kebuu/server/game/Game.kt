@@ -44,27 +44,24 @@ open class Game(val config: GameConfig,
         this.gamers.addAll(gamers)
     }
 
-    fun getGamer(gamerId: String): Gamer {
-        return gamers.first { it.gamerId() == gamerId }
-    }
+    fun getGamer(gamerId: String): Gamer =
+        gamers.first { it.gamerId() == gamerId }
 
-    fun gamerExists(gamerId: String):Boolean {
-        return gamers.any { it.gamerId() == gamerId }
-    }
+    fun gamerExists(gamerId: String):Boolean =
+        gamers.any { it.gamerId() == gamerId }
 
-    fun getSpawn(gamerId: String): Spawn {
-        return board.gamerSpawn(getGamer(gamerId))
-    }
+    fun getSpawn(gamerId: String): Spawn =
+        board.gamerSpawn(getGamer(gamerId))
 
     fun init() {
         status = GameStatus.STARTED
 
-        gamers.forEach {
-            val spawnAttributes = if(level.enableSpawnUpdate) SpawnAttributes() else SpawnAttributes(3, 0, 0, 0)
-            val spawn = Spawn(it, spawnAttributes, board.randomEmptyPosition())
+        gamers.forEach { gamer ->
+            val spawnAttributes = if (level.enableSpawnUpdate)SpawnAttributes() else SpawnAttributes(3, 0, 0, 0)
+            val spawn = Spawn(gamer, spawnAttributes, board.randomEmptyPosition())
             board.addItem(spawn)
-            it.setLife(config.gamerLife)
-            it.setZPoints(config.initialZPoints)
+            gamer.setLife(config.gamerLife)
+            gamer.setZPoints(config.initialZPoints)
         }
     }
 
@@ -118,21 +115,21 @@ open class Game(val config: GameConfig,
 
     private fun updateSpawns(updateSpawnPoints: Int) {
         logger.info("Getting spawn update with $updateSpawnPoints points")
-        val spawnAttributesUpdatePoints = updateSpawnPoints
-        val gamersSpawnAttributes = getGamersSpawnUpdate(spawnAttributesUpdatePoints)
+        val gamersSpawnAttributes = getGamersSpawnUpdate(updateSpawnPoints)
 
         for (gamerSpawnAttributes in gamersSpawnAttributes) {
             val gamer = gamerSpawnAttributes.gamer
             val spawn = getSpawn(gamer.gamerId())
 
             logger.info("Getting spawn update for ${gamer.shortName()}")
-            val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, spawnAttributesUpdatePoints)
-            if (validationResult.isOk()) {
-                spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
-            } else {
-                val spawnAttributesUpdated = spawn.attributes.updateRandomly(spawnAttributesUpdatePoints)
-                spawn.updateAttributesTo(spawnAttributesUpdated)
-                eventLogService.logEvent(WarnGameEvent(gamer.gamerId(), currentStep, validationResult.message))
+            val validationResult = spawn.validateUpdate(gamerSpawnAttributes.spawnAttributes, updateSpawnPoints)
+            when {
+                validationResult.isOk() -> spawn.updateAttributesTo(gamerSpawnAttributes.spawnAttributes)
+                else                    -> {
+                    val spawnAttributesUpdated = spawn.attributes.updateRandomly(updateSpawnPoints)
+                    spawn.updateAttributesTo(spawnAttributesUpdated)
+                    eventLogService.logEvent(WarnGameEvent(gamer.gamerId(), currentStep, validationResult.message))
+                }
             }
 
             eventLogService.logEvent(GameEvent(gamer.gamerId(),  currentStep,
@@ -163,7 +160,7 @@ open class Game(val config: GameConfig,
     private fun getGamersSpawnUpdate(updatePoints: Int): List<GamerSpawnAttributes> {
         val futureGamerSpawnAttributes = mutableListOf<CompletableFuture<GamerSpawnAttributes>>()
 
-        gamers.map { gamer ->
+        gamers.forEach { gamer ->
             futureGamerSpawnAttributes.add(CompletableFuture.supplyAsync {
                 getGamersSpawnUpdate(gamer, updatePoints, getSpawn(gamer.gamerId()).attributes)
             })
@@ -203,7 +200,7 @@ open class Game(val config: GameConfig,
                     "$gamerName a oublié que certaines action n'étaient pas autorisées à ce niveau du jeu"))
         }
 
-        for (gamerAction in sortedActions) {
+        sortedActions.forEach { gamerAction ->
             if (!gamerAction.gamer.isDead()) {
                 val validator = ActionValidatorVisitor(this, gamerAction.gamer)
                 val executor = ActionExecutorVisitor(this, gamerAction.gamer)
@@ -211,11 +208,15 @@ open class Game(val config: GameConfig,
                 val gamerInitialPosition = getSpawn(gamerAction.gamer.gamerId()).position
 
                 val validationResult = action.validateBy(validator)
-                if (validationResult.isOk()) {
-                    val executionMessage = action.executeBy(executor)
-                    eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(),  currentStep, "($gamerInitialPosition) - $executionMessage"))
-                } else {
-                    eventLogService.logEvent(WarnGameEvent(gamerAction.gamer.gamerId(),  currentStep, "($gamerInitialPosition) - ${validationResult.getValidationErrorMessages()}"))
+                when {
+                    validationResult.isOk() -> {
+                        val message = "($gamerInitialPosition) - ${action.executeBy(executor)}"
+                        eventLogService.logEvent(GameEvent(gamerAction.gamer.gamerId(), currentStep, message))
+                    }
+                    else                    -> {
+                        val message = "($gamerInitialPosition) - ${validationResult.getValidationErrorMessages()}"
+                        eventLogService.logEvent(WarnGameEvent(gamerAction.gamer.gamerId(), currentStep, message))
+                    }
                 }
             }
         }
@@ -240,13 +241,12 @@ open class Game(val config: GameConfig,
     }
 
     fun gamerUsedLimitedAction(gamer: Gamer, action: LimitedUseAction) {
-        val limitedActionUsedForGamer = limitedActionUsedByGamers.getOrPut(gamer, { mutableMapOf() })
-        val limitedActionUse = limitedActionUsedForGamer.getOrPut(action.getType(), { 0 })
-        limitedActionUsedForGamer.put(action.getType(), limitedActionUse + 1)
+        val limitedActionUsedForGamer = limitedActionUsedByGamers.getOrPut(gamer) { mutableMapOf() }
+        val limitedActionUse = limitedActionUsedForGamer.getOrPut(action.getType()) { 0 }
+        limitedActionUsedForGamer[action.getType()] = limitedActionUse + 1
     }
 
-    fun getLimitedActionUsedBy(gamer: Gamer, actionType: LimitedUseActionType): Int {
-        return limitedActionUsedByGamers[gamer]?.get(actionType) ?: 0
-    }
+    fun getLimitedActionUsedBy(gamer: Gamer, actionType: LimitedUseActionType): Int =
+        limitedActionUsedByGamers[gamer]?.get(actionType) ?: 0
 }
 

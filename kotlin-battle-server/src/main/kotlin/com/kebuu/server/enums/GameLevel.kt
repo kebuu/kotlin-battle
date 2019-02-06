@@ -49,7 +49,7 @@ enum class GameLevel(val enableSpawnUpdate: Boolean,
 
 object BoardItemGenerator {
 
-    val random = Random()
+    private val random = Random()
 
     val treasureGenerator =  { game: Game ->
         Treasure(game.board.randomEmptyPosition(), (random.nextInt(9) + 1) * 10)
@@ -61,8 +61,8 @@ object BoardItemGenerator {
 
 object BotGenerator {
 
-    val dummyGenerator =  { game: Game -> DummyBot() }
-    val immobileGenerator =  { game: Game -> ImmobileBot() }
-    val greedyGenerator =  { game: Game -> GreedyBot() }
-    val aggressiveGenerator =  { game: Game -> AggressiveBot() }
+    val dummyGenerator =  { _: Game -> DummyBot() }
+    val immobileGenerator =  { _: Game -> ImmobileBot() }
+    val greedyGenerator =  { _: Game -> GreedyBot() }
+    val aggressiveGenerator =  { _: Game -> AggressiveBot() }
 }

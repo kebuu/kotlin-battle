@@ -12,19 +12,17 @@ import com.kebuu.core.dto.board.item.MountainBoardItemDto
 import com.kebuu.core.dto.board.item.SpawnBoardItemDto
 import com.kebuu.core.gamer.BaseGamer
 
-class AggressiveBot private constructor(gamerId: String, override val type: String): BaseGamer(gamerId), Bot {
+class AggressiveBot private constructor(gamerId: String, override val type: String) : BaseGamer(gamerId), Bot {
 
-    constructor(): this("AggressiveBot-" + Bot.COUNTER.andIncrement, "aggressiveBot")
+    constructor() : this("AggressiveBot-" + Bot.COUNTER.andIncrement, "aggressiveBot")
 
     var spawnAttributes = SpawnAttributes()
     lateinit var dimension: Dimension
 
     override fun doGetNextAction(gameInfo: GameInfo): StepAction {
-        if(gameInfo.board.dimension != null) {
+        if (gameInfo.board.dimension != null) {
             dimension = gameInfo.board.dimension!!
         }
-
-        var action: StepAction = NoAction()
 
         spawnAttributes = gameInfo.spawnAttributes
         val itemsAt = gameInfo.board.boardItems.groupBy { it.position }
@@ -35,24 +33,23 @@ class AggressiveBot private constructor(gamerId: String, override val type: Stri
 
         val closestEnemy: SpawnBoardItemDto? = enemies.minBy { it.position.distanceFrom(gameInfo.position) }
 
-        closestEnemy?.let { enemy ->
-            if (enemy.position.distanceFrom(gameInfo.position) <= spawnAttributes.shootDistance) {
-                action = FightAction(enemy.gamerId)
-            } else {
-                val closestAccessiblePosition = dimension.
-                        filter {
-                            gameInfo.position.distanceFrom(it) <= spawnAttributes.speed
-                        }
-                        .filter {
-                            val items = itemsAt[it] ?: listOf()
-                            items.none { it is MountainBoardItemDto }
-                        }
-                        .minBy { it.distanceFrom(enemy.position) }!!
-                action = MoveAction(closestAccessiblePosition)
+        return closestEnemy?.let { enemy ->
+            when {
+                enemy.position.distanceFrom(gameInfo.position) <= spawnAttributes.shootDistance -> FightAction(enemy.gamerId)
+                else                                                                            -> {
+                    val closestAccessiblePosition = dimension
+                            .filter {
+                                gameInfo.position.distanceFrom(it) <= spawnAttributes.speed
+                            }
+                            .filter { position ->
+                                val items = itemsAt[position] ?: listOf()
+                                items.none { it is MountainBoardItemDto }
+                            }
+                            .minBy { it.distanceFrom(enemy.position) }!!
+                    MoveAction(closestAccessiblePosition)
+                }
             }
-        }
-
-        return action
+        } ?: NoAction()
     }
 
     override fun doGetSpawnAttributes(point: Int): SpawnAttributes {

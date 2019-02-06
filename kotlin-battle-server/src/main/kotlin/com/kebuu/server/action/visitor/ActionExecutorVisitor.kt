@@ -10,7 +10,7 @@ import com.kebuu.server.game.Game
 class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
 
     private val board = game.board
-    
+
     override fun execute(noAction: NoAction) = "${gamer.shortName()} a eu peur, il n'a rien fait ce tour-ci !"
 
     override fun execute(digAction: DigAction): String {
@@ -56,7 +56,7 @@ class ActionExecutorVisitor(val game: Game, val gamer: Gamer) : ActionExecutor {
         return "${gamer.shortName()} se déplace en ${moveAction.goTo.x}-${moveAction.goTo.y}"
     }
 
-    override fun execute(exceptionAction: ExceptionAction) = 
+    override fun execute(exceptionAction: ExceptionAction) =
         "/!\\ ${gamer.shortName()} ne fera rien ce tour-ci a cause d'une exception : ${exceptionAction.message}"
 
     override fun execute(timeoutAction: TimeoutAction) = "/!\\\\ ${gamer.shortName()} a été trop lent pour pouvoir jouer dans ce tour"

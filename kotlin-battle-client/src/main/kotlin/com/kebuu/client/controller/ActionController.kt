@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/actions/next")
-class ActionController @Autowired constructor(val actionService: ActionService) : Loggable {
+class ActionController @Autowired constructor(private val actionService: ActionService) : Loggable {
 
     @PutMapping
     fun action(@RequestBody gameInfo: GameInfo, bindingResult: BindingResult): StepAction {
