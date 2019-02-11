@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/spawn")
-class SpawnController @Autowired constructor(val spawnService: SpawnService) : Loggable {
+class SpawnController @Autowired constructor(private val spawnService: SpawnService) : Loggable {
 
     @GetMapping("/update")
     fun spawnUpdate(@RequestParam point: Int): SpawnAttributes {

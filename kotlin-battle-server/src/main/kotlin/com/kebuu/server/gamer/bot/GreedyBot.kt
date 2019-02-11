@@ -10,21 +10,19 @@ import com.kebuu.core.bot.Bot
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.dto.board.item.TreasureBoardItemDto
 import com.kebuu.core.gamer.BaseGamer
-import com.kebuu.server.config.GameConfig
 
-class GreedyBot private constructor(gamerId: String, override val type: String): BaseGamer(gamerId), Bot {
-
-    constructor(): this("GreedyBot-" + Bot.COUNTER.andIncrement, "greedyBot")
+class GreedyBot constructor(
+        gamerId: String = "GreedyBot-${Bot.COUNTER.andIncrement}",
+        override val type: String = "greedyBot"
+) : BaseGamer(gamerId), Bot {
 
     var spawnAttributes = SpawnAttributes()
     lateinit var dimension: Dimension
 
     override fun doGetNextAction(gameInfo: GameInfo): StepAction {
-        if(gameInfo.board.dimension != null) {
+        if (gameInfo.board.dimension != null) {
             dimension = gameInfo.board.dimension!!
         }
-
-        var action: StepAction = NoAction()
 
         spawnAttributes = gameInfo.spawnAttributes
 
@@ -34,26 +32,29 @@ class GreedyBot private constructor(gamerId: String, override val type: String):
                 .filter { it.position == gameInfo.position || itemsAt[it.position]?.size == 1 }
                 .filter { it is TreasureBoardItemDto }
 
-        if(treasures.isNotEmpty()) {
-            if(treasures.any { it.position == gameInfo.position }){
-                action = DigAction()
-            } else {
-                val accessibleTreasures = treasures.filter {
-                    gameInfo.position.distanceFrom(it.position) <= spawnAttributes.speed
-                }
+        return if (treasures.isNotEmpty()) {
+            val botIsOnTreasure = treasures.any { it.position == gameInfo.position }
+            when {
+                botIsOnTreasure -> DigAction()
+                else            -> {
+                    val accessibleTreasures = treasures.filter {
+                        gameInfo.position.distanceFrom(it.position) <= spawnAttributes.speed
+                    }
 
-                if(accessibleTreasures.isNotEmpty()) {
-                    action = MoveAction(accessibleTreasures.first().position)
-                } else {
-                    val closestTreasure = treasures.minBy { it.position.distanceFrom(gameInfo.position) }!!
-                    val closestAccessiblePosition = dimension.filter { gameInfo.position.distanceFrom(it) <= spawnAttributes.speed }
-                            .minBy { it.distanceFrom(closestTreasure.position) }!!
-                    action = MoveAction(closestAccessiblePosition)
+                    if (accessibleTreasures.isNotEmpty()) {
+                        MoveAction(accessibleTreasures.first().position)
+                    } else {
+                        val closestTreasure = treasures.minBy { it.position.distanceFrom(gameInfo.position) }!!
+                        val closestAccessiblePosition = dimension
+                                .filter { gameInfo.position.distanceFrom(it) <= spawnAttributes.speed }
+                                .minBy { it.distanceFrom(closestTreasure.position) }!!
+                        MoveAction(closestAccessiblePosition)
+                    }
                 }
             }
+        } else {
+            NoAction()
         }
-
-        return action
     }
 
     override fun doGetSpawnAttributes(point: Int): SpawnAttributes {

@@ -5,7 +5,7 @@ import java.util.*
 
 object ActionComparator: Comparator<StepAction> {
 
-    val MIN_PRIORITY = Int.MAX_VALUE
+    const val MIN_PRIORITY = Int.MAX_VALUE
 
     val actionPriorities = mapOf(
         HealAction::class.java to 100,

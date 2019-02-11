@@ -14,15 +14,14 @@ abstract class BaseGamer(val userId: String, private var zPoints: Int = 100): Ga
     abstract fun doGetNextAction(gameInfo: GameInfo): StepAction
     abstract fun doGetSpawnAttributes(point: Int): SpawnAttributes
 
-    override fun getNextAction(gameInfo: GameInfo): GamerAction {
-        return GamerAction(this, doGetNextAction(gameInfo))
-    }
+    override fun getNextAction(gameInfo: GameInfo): GamerAction =
+        GamerAction(this, doGetNextAction(gameInfo))
 
-    override fun getSpawnAttributes(point: Int): GamerSpawnAttributes {
-        return GamerSpawnAttributes(this, doGetSpawnAttributes(point))
-    }
+    override fun getSpawnAttributes(point: Int): GamerSpawnAttributes =
+        GamerSpawnAttributes(this, doGetSpawnAttributes(point))
 
     override fun getZPoints() = zPoints
+
     override fun getLife() = life
 
     override fun gainZPoints(zPoints: Int) {
@@ -59,7 +58,5 @@ abstract class BaseGamer(val userId: String, private var zPoints: Int = 100): Ga
         return true
     }
 
-    override fun hashCode(): Int {
-        return userId.hashCode()
-    }
+    override fun hashCode(): Int = userId.hashCode()
 }

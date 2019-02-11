@@ -6,13 +6,12 @@ import com.kebuu.core.board.Mountain
 import com.kebuu.core.gamer.Gamer
 import com.kebuu.server.game.Game
 
-fun Game.isOnBoard(position: Position) = this.board.isOnBoard(position)
+fun Game.isOnBoard(position: Position) = board.isOnBoard(position)
 
-fun Game.spawnOf(gamer: Gamer) = this.board.gamerSpawn(gamer)
+fun Game.spawnOf(gamer: Gamer) = board.gamerSpawn(gamer)
 
-fun Game.isThereMountainOn(position: Position): Boolean {
-    return this.board.itemsAt(position).any { it is Mountain }
-}
+fun Game.isThereMountainOn(position: Position): Boolean =
+    board.itemsAt(position).any { it is Mountain }
 
 fun Game.canGamerUseLimitedAction(gamer: Gamer, action: LimitedUseAction): Boolean {
     val actionUsedOccurrence = limitedActionUsedByGamers[gamer] ?. get(action.getType()) ?: 0

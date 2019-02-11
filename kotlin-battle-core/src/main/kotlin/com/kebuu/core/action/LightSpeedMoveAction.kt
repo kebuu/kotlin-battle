@@ -5,9 +5,7 @@ import com.kebuu.core.action.validation.ActionValidator
 
 data class LightSpeedMoveAction(val moveAction: MoveAction): LimitedUseAction {
 
-    override fun getType(): LimitedUseAction.LimitedUseActionType {
-        return LimitedUseAction.LimitedUseActionType.LIGHT_SPEED
-    }
+    override fun getType(): LimitedUseAction.LimitedUseActionType = LimitedUseAction.LimitedUseActionType.LIGHT_SPEED
 
     override fun validateBy(validator: ActionValidator) = validator.validate(this)
 

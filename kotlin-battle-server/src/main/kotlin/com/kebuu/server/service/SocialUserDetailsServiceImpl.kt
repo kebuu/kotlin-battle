@@ -6,7 +6,9 @@ import org.springframework.social.security.SocialUserDetailsService
 import org.springframework.stereotype.Service
 
 @Service
-class SocialUserDetailsServiceImpl @Autowired constructor(val userRegistryService: UserRegistryService): SocialUserDetailsService {
+class SocialUserDetailsServiceImpl @Autowired constructor(
+        private val userRegistryService: UserRegistryService
+): SocialUserDetailsService {
 
     override fun loadUserByUserId(userId: String): SocialUserDetails? {
         return userRegistryService.getUser(userId)

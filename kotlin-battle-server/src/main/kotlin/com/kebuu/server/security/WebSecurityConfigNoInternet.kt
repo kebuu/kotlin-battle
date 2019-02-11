@@ -1,6 +1,6 @@
 package com.kebuu.server.security
 
-import com.kebuu.core.constant.KotlinBattleConstant
+import com.kebuu.core.constant.ROLE_ADMIN
 import com.kebuu.server.service.UserRegistryService
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -16,11 +16,11 @@ open class WebSecurityConfigNoInternet(val userDetailService: UserDetailsService
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests().antMatchers("/", "/signin/**", "/games/profile", "/games/config").permitAll()
-                .antMatchers("/games/new", "/games/start", "/games/stop", "/games/resume").hasRole(KotlinBattleConstant.ROLE_ADMIN)
+                .antMatchers("/games/new", "/games/start", "/games/stop", "/games/resume").hasRole(ROLE_ADMIN)
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .formLogin().defaultSuccessUrl("/", true)
-                .and().logout().addLogoutHandler { httpServletRequest, httpServletResponse, authentication ->
+                .and().logout().addLogoutHandler { _, _, authentication ->
                     authentication?.let { userRegistryService.remove(authentication.name)  }
                 }
     }

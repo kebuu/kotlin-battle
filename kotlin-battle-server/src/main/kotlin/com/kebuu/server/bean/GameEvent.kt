@@ -9,14 +9,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
         JsonSubTypes.Type(value = WarnGameEvent::class, name = "warn"),
         JsonSubTypes.Type(value = ErrorGameEvent::class, name = "error")
 )
-open class GameEvent(val username: String, val gameStep: Int, val message: String){
+open class GameEvent(val username: String, val gameStep: Int, val message: String) {
 
-    val timestamp: Long
+    val timestamp: Long = System.nanoTime()
 
-    init {
-        timestamp = System.nanoTime()
-    }
 }
 
-class WarnGameEvent(username: String, gameStep: Int, message: String): GameEvent(username, gameStep, message)
-class ErrorGameEvent(username: String, gameStep: Int, message: String): GameEvent(username, gameStep, message)
+class WarnGameEvent(username: String, gameStep: Int, message: String) : GameEvent(username, gameStep, message)
+class ErrorGameEvent(username: String, gameStep: Int, message: String) : GameEvent(username, gameStep, message)

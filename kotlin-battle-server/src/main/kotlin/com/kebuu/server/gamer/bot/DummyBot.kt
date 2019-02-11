@@ -10,36 +10,35 @@ import com.kebuu.core.bot.Bot
 import com.kebuu.core.dto.GameInfo
 import com.kebuu.core.gamer.BaseGamer
 
-class DummyBot private constructor(gamerId: String, override val type: String): BaseGamer(gamerId), Bot {
-
-    constructor(): this("DummyBot-" + Bot.COUNTER.andIncrement, "dummyBot")
+class DummyBot constructor(
+        gamerId: String = "DummyBot-${Bot.COUNTER.andIncrement}",
+        override val type: String = "dummyBot"
+) : BaseGamer(gamerId), Bot {
 
     lateinit var boardDimension: Dimension
 
     companion object {
         val operations = listOf(
-            { position: Position -> position.plusX(1)},
-            { position: Position -> position.plusY(1)},
-            { position: Position -> position.plusX(-1)},
-            { position: Position -> position.plusY(-1)}
+                { position: Position -> position.plusX(1) },
+                { position: Position -> position.plusY(1) },
+                { position: Position -> position.plusX(-1) },
+                { position: Position -> position.plusY(-1) }
         )
     }
 
     override fun doGetNextAction(gameInfo: GameInfo): StepAction {
-        if(gameInfo.board.dimension != null) {
+        if (gameInfo.board.dimension != null) {
             boardDimension = gameInfo.board.dimension!!
         }
 
         return operations.map { it(gameInfo.position) }
-                .map(::MoveAction)
-                .firstOrNull {
-                    it.goTo.x in 0..(boardDimension.x - 1)  && it.goTo.y in 0..(boardDimension.y - 1)
-                }
-                ?: NoAction()
+                       .map(::MoveAction)
+                       .firstOrNull {
+                           it.goTo.x in 0..(boardDimension.x - 1) && it.goTo.y in 0..(boardDimension.y - 1)
+                       }
+               ?: NoAction()
     }
 
-    override fun doGetSpawnAttributes(point: Int): SpawnAttributes {
-        return SpawnAttributes(speed = 1)
-    }
+    override fun doGetSpawnAttributes(point: Int): SpawnAttributes = SpawnAttributes(speed = 1)
 }
 

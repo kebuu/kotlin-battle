@@ -5,16 +5,13 @@ import com.kebuu.core.board.Board
 import com.kebuu.core.dto.board.item.AbstractBoardItemDto
 import com.kebuu.core.dto.board.item.BoardItemDtoFactory
 
-class BoardDto {
+class BoardDto(board: Board) {
 
-    val dimension: Dimension
-    val items: Map<String, List<AbstractBoardItemDto>>
+    val dimension: Dimension = board.dimension
 
-    constructor(board: Board) {
-        dimension = board.dimension
-
-        items = board.itemsByPosition().mapValues {
-            it.value.map { BoardItemDtoFactory.from(it) }
+    val items: Map<String, List<AbstractBoardItemDto>> =
+        board.itemsByPosition().mapValues {
+            it.value.map { item -> BoardItemDtoFactory.from(item) }
         }.mapKeys { "${it.key.x}_${it.key.y}" }
-    }
+
 }

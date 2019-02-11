@@ -55,8 +55,8 @@ class GameController @Autowired constructor(val gameManager: GameManager, val ga
     }
 
     @GetMapping("/register")
-    fun register(@RequestParam(defaultValue = "8081") port: Int, principal: Principal, request: HttpServletRequest): ResponseEntity<Void> {
-        return try {
+    fun register(@RequestParam(defaultValue = "8081") port: Int, principal: Principal, request: HttpServletRequest): ResponseEntity<Void> =
+        try {
             gameManager.register(principal.toUser().email, request.remoteAddr, port)
             ResponseEntity.ok().build()
         } catch (e: UnknownUserException) {
@@ -64,16 +64,14 @@ class GameController @Autowired constructor(val gameManager: GameManager, val ga
         } catch (e: UnknownUserException) {
             ResponseEntity.status(428).build()
         }
-    }
 
     @GetMapping("/unregister")
-    fun unregister(principal: Principal): ResponseEntity<Void> {
-        return try {
+    fun unregister(principal: Principal): ResponseEntity<Void> =
+        try {
             gameManager.unregister(principal.toUser().email)
             ResponseEntity.ok().build()
         } catch (e: UnknownUserException) {
             ResponseEntity.status(428).build()
         }
-    }
 }
 

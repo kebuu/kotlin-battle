@@ -41,7 +41,7 @@ class ActionControllerTest {
     @Autowired lateinit var objectMapper: ObjectMapper
     @Autowired lateinit var actionService: ActionService
 
-    lateinit var mvc: MockMvc
+    private lateinit var mvc: MockMvc
 
     @Before
     fun setUp() {

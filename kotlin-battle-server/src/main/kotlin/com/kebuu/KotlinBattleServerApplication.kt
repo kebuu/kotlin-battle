@@ -20,7 +20,8 @@ import java.util.*
 @EnableSocial
 open class KotlinBattleApplication {
 
-    lateinit @Autowired var gameConfig: GameConfig
+    @Autowired
+    lateinit var gameConfig: GameConfig
 
     @Bean
     open fun restTemplate(): RestTemplate {
@@ -33,27 +34,25 @@ open class KotlinBattleApplication {
     }
 
     @Bean
-    open fun objectMapper(): ObjectMapper {
-        val objectMapper = ObjectMapper()
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-        objectMapper.disable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES)
-        objectMapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
+    open fun objectMapper(): ObjectMapper = ObjectMapper().apply {
+        disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        disable(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES)
+        enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
 
-        objectMapper.findAndRegisterModules()
-        return objectMapper
+        findAndRegisterModules()
     }
 
     private fun clientHttpRequestFactory(): ClientHttpRequestFactory {
         val timeout = gameConfig.gamerResponseTimeoutTimeUnit.toMillis(gameConfig.gamerResponseTimeout).toInt()
 
-        val factory = HttpComponentsClientHttpRequestFactory()
-        factory.setReadTimeout(timeout)
-        factory.setConnectTimeout(timeout)
-        return factory
+        return HttpComponentsClientHttpRequestFactory().apply {
+            setReadTimeout(timeout)
+            setConnectTimeout(timeout)
+        }
     }
 }
 
-fun main(args : Array<String>){
+fun main(args: Array<String>) {
     SpringApplication.run(KotlinBattleApplication::class.java, *args)
 }

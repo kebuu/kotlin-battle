@@ -1,6 +1,6 @@
 package com.kebuu.core.board.spawn
 
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class SpawnAttributesTest {
@@ -10,11 +10,11 @@ class SpawnAttributesTest {
         val spawnAttributes = SpawnAttributes()
 
         val updatedSpawnAttributes = spawnAttributes.updateRandomly(4)
-        Assertions.assertThat(spawnAttributes.sumPoints).isEqualTo(4)
-        Assertions.assertThat(spawnAttributes).isEqualTo(updatedSpawnAttributes)
+        assertThat(spawnAttributes.sumPoints).isEqualTo(4)
+        assertThat(spawnAttributes).isEqualTo(updatedSpawnAttributes)
 
         spawnAttributes.updateRandomly(3)
-        Assertions.assertThat(spawnAttributes.sumPoints).isEqualTo(7)
+        assertThat(spawnAttributes.sumPoints).isEqualTo(7)
 
     }
 
